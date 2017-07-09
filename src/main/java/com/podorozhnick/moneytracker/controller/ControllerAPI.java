@@ -8,4 +8,6 @@ public class ControllerAPI {
 
     public static final String CATEGORIES_CONTROLLER = API + "/categories";
 
+    public static final String ENTRIES_CONTROLLER = API + "/entries";
+
 }
