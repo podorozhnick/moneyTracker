@@ -1,4 +1,4 @@
-package com.podorozhnick.moneytracker.dao;
+package com.podorozhnick.moneytracker.db.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

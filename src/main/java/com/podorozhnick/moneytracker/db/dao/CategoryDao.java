@@ -1,6 +1,6 @@
-package com.podorozhnick.moneytracker.dao;
+package com.podorozhnick.moneytracker.db.dao;
 
-import com.podorozhnick.moneytracker.model.Category;
+import com.podorozhnick.moneytracker.db.model.Category;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

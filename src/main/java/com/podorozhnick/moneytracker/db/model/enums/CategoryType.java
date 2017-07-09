@@ -1,4 +1,4 @@
-package com.podorozhnick.moneytracker.model.enums;
+package com.podorozhnick.moneytracker.db.model.enums;
 
 public enum CategoryType {
 

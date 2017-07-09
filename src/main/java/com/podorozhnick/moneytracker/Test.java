@@ -1,15 +1,8 @@
 package com.podorozhnick.moneytracker;
 
 import com.podorozhnick.moneytracker.config.AppConfig;
-import com.podorozhnick.moneytracker.model.Category;
-import com.podorozhnick.moneytracker.model.CategoryRelations;
-import com.podorozhnick.moneytracker.model.enums.CategoryType;
-import com.podorozhnick.moneytracker.service.CategoryRelationsService;
-import com.podorozhnick.moneytracker.service.CategoryService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-
-import java.util.List;
 
 public class Test {
 
@@ -30,8 +23,6 @@ public class Test {
 //
 //        List<Category> categories = service.list();
 
-        CategoryRelationsService service = (CategoryRelationsService) context.getBean("categoryRelationsService");
-        CategoryRelations categoryRelations = service.getByCategoryId(481l);
 
         context.close();
     }

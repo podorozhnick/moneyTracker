@@ -1,8 +1,9 @@
 package com.podorozhnick.moneytracker.controller;
 
-import com.podorozhnick.moneytracker.model.Category;
+import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import com.podorozhnick.moneytracker.util.JsonUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,6 @@ public class CategoryController {
         if (category == null) {
             return new ResponseEntity<>("Bad Json", null, HttpStatus.BAD_REQUEST);
         }
-        if (category.getParentId() != null) {
-            Category parent = categoryService.getById(category.getParentId());
-            if (parent == null) {
-                return new ResponseEntity<>("Bad Json", null, HttpStatus.BAD_REQUEST);
-            }
-            category.setParentCategory(parent);
-        }
         category = categoryService.add(category);
         return new ResponseEntity<>(JsonUtils.toJson(category), null, HttpStatus.CREATED);
 
@@ -59,18 +53,9 @@ public class CategoryController {
         if (category == null) {
             return new ResponseEntity<>("Bad json", null, HttpStatus.BAD_REQUEST);
         }
-        loadedCategory.setName(category.getName());
-        loadedCategory.setType(category.getType());
-        loadedCategory.setParentId(category.getParentId());
-        if (loadedCategory.getParentId() != null) {
-            Category parent = categoryService.getById(category.getParentId());
-            if (parent == null) {
-                return new ResponseEntity<>("Bad Json", null, HttpStatus.BAD_REQUEST);
-            }
-            loadedCategory.setParentCategory(parent);
-        }
-        categoryService.save(category);
-        return new ResponseEntity<>(JsonUtils.toJson(category), null, HttpStatus.CREATED);
+        BeanUtils.copyProperties(category, loadedCategory);
+        categoryService.save(loadedCategory);
+        return new ResponseEntity<>(JsonUtils.toJson(loadedCategory), null, HttpStatus.CREATED);
     }
 
 }
