@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.podorozhnick.moneytracker.controller.ControllerAPI.CATEGORIES_CONTROLLER;
+import static com.podorozhnick.moneytracker.controller.ControllerAPI.GENERAL_REQUEST;
+import static com.podorozhnick.moneytracker.controller.ControllerAPI.ID_REQUEST;
+
 @Controller
-@RequestMapping("categories")
-public class CategoryController {
+@RequestMapping(CATEGORIES_CONTROLLER)
+public class CategoriesController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = "text/json;charset=UTF-8")
+    @GetMapping(GENERAL_REQUEST)
     @ResponseBody
     public ResponseEntity<String> getCategoryList() {
         List<Category> categoryList = categoryService.list();
@@ -30,7 +34,7 @@ public class CategoryController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @PostMapping(GENERAL_REQUEST)
     @ResponseBody
     public ResponseEntity<String> addCategory(@RequestBody String jsonCategory) {
         Category category = JsonUtils.fromJson(Category.class, jsonCategory);
@@ -42,7 +46,7 @@ public class CategoryController {
 
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping(ID_REQUEST)
     @ResponseBody
     public ResponseEntity<String> editCategory(@PathVariable Long id, @RequestBody String jsonCategory) {
         Category loadedCategory = categoryService.getById(id);
