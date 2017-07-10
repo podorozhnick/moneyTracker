@@ -71,15 +71,6 @@ public class JettyServer {
         contextHandler.addServlet(new ServletHolder(dispatcherServlet), MAPPING_URL);
         contextHandler.addEventListener(new ContextLoaderListener(context));
 
-        // Add the filter, and then use the provided FilterHolder to configure it
-        FilterHolder cors = contextHandler.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,DELETE,OPTIONS");
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
-        cors.setInitParameter(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM, "3600");
-
-
         return contextHandler;
     }
 
