@@ -1,6 +1,6 @@
 package com.podorozhnick.moneytracker.db.model;
 
-import com.google.gson.annotations.Expose;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.podorozhnick.moneytracker.db.model.enums.CategoryType;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,16 +19,16 @@ public class Category {
 
     @Id
     @GeneratedValue
-    @Expose
+    @JsonProperty
     private long id;
 
     @Column(name = "name")
-    @Expose
+    @JsonProperty
     private String name;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    @Expose
+    @JsonProperty
     private CategoryType type;
 
 }

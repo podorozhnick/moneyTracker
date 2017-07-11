@@ -1,6 +1,6 @@
 package com.podorozhnick.moneytracker.db.model;
 
-import com.google.gson.annotations.Expose;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,20 +19,20 @@ public class Entry {
 
     @Id
     @GeneratedValue
-    @Expose
+    @JsonProperty
     private long id;
 
     @Column(name = "date")
-    @Expose
+    @JsonProperty
     private Date date;
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
-    @Expose
+    @JsonProperty
     private Category category;
 
     @Column(name = "description")
-    @Expose
+    @JsonProperty
     private String description;
 
 }
