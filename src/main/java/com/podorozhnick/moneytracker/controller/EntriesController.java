@@ -25,40 +25,37 @@ public class EntriesController {
     private EntryService entryService;
 
     @GetMapping(GENERAL_REQUEST)
-    @ResponseBody
-    public ResponseEntity<String> getEntryList() {
+    public ResponseEntity<List<Entry>> getEntryList() {
         List<Entry> entryList = entryService.list();
         if (CollectionUtils.isEmpty(entryList)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(JsonUtils.toJson(entryList), HttpStatus.OK);
+        return new ResponseEntity<>(entryList, HttpStatus.OK);
     }
 
     @PostMapping(GENERAL_REQUEST)
-    @ResponseBody
-    public ResponseEntity<String> addEntry(@RequestBody String json) {
+    public ResponseEntity<Entry> addEntry(@RequestBody String json) {
         Entry entry = JsonUtils.fromJson(Entry.class, json);
         if (entry == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         entry = entryService.add(entry);
-        return new ResponseEntity<String>(JsonUtils.toJson(entry), HttpStatus.CREATED);
+        return new ResponseEntity<>(entry, HttpStatus.CREATED);
     }
 
     @PutMapping(ID_REQUEST)
-    @ResponseBody
-    public ResponseEntity<String> editEntry(@PathVariable Long id, @RequestBody String json) {
+    public ResponseEntity<Entry> editEntry(@PathVariable Long id, @RequestBody String json) {
         Entry loadedEntry = entryService.getById(id);
         if (loadedEntry == null) {
-            return new ResponseEntity<>("Bad id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Bad id", HttpStatus.BAD_REQUEST);
         }
         Entry entry = JsonUtils.fromJson(Entry.class, json);
         if (entry == null) {
-            return new ResponseEntity<>("Bad json", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Bad json", HttpStatus.BAD_REQUEST);
         }
         BeanUtils.copyProperties(entry, loadedEntry);
         entryService.save(loadedEntry);
-        return new ResponseEntity<>(JsonUtils.toJson(loadedEntry), null, HttpStatus.CREATED);
+        return new ResponseEntity<>(loadedEntry, HttpStatus.CREATED);
 
     }
 
