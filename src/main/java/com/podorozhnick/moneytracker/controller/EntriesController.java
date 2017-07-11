@@ -1,5 +1,7 @@
 package com.podorozhnick.moneytracker.controller;
 
+import com.podorozhnick.moneytracker.controller.exception.NoContentException;
+import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import com.podorozhnick.moneytracker.service.EntryService;
 import com.podorozhnick.moneytracker.util.JsonUtils;
@@ -25,10 +27,10 @@ public class EntriesController {
     private EntryService entryService;
 
     @GetMapping(GENERAL_REQUEST)
-    public ResponseEntity<List<Entry>> getEntryList() {
+    public ResponseEntity<List<Entry>> getEntryList() throws RestException {
         List<Entry> entryList = entryService.list();
         if (CollectionUtils.isEmpty(entryList)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new NoContentException();
         }
         return new ResponseEntity<>(entryList, HttpStatus.OK);
     }
