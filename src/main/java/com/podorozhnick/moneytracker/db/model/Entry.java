@@ -1,12 +1,20 @@
 package com.podorozhnick.moneytracker.db.model;
 
 import com.google.gson.annotations.Expose;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "entry")
+@Getter
+@Setter
+@Accessors(chain = true)
+@ToString
 public class Entry {
 
     @Id
@@ -27,35 +35,4 @@ public class Entry {
     @Expose
     private String description;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

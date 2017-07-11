@@ -1,5 +1,6 @@
 package com.podorozhnick.moneytracker.server;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -16,9 +17,8 @@ import javax.servlet.DispatcherType;
 import java.io.IOException;
 import java.util.EnumSet;
 
+@Slf4j
 public class JettyServer {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JettyServer.class);
 
     private static JettyServer jettyServer;
 
@@ -51,14 +51,14 @@ public class JettyServer {
     }
 
     private void startJetty(int port) throws Exception {
-        LOGGER.debug("Starting server at port {}", port);
+        log.debug("Starting server at port {}", port);
         server = new Server(port);
         server.setHandler(getServletContextHandler(getContext()));
 
 
 
         server.start();
-        LOGGER.info("Server started at port {}", port);
+        log.info("Server started at port {}", port);
         server.join();
     }
 
@@ -92,7 +92,7 @@ public class JettyServer {
             }
         };
         thread.start();
-        LOGGER.info("SERVER STOPPED");
+        log.info("SERVER STOPPED");
     }
 
 }
