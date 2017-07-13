@@ -1,8 +1,11 @@
 package com.podorozhnick.moneytracker.controller;
 
+import com.podorozhnick.moneytracker.controller.exception.BadRequestException;
+import com.podorozhnick.moneytracker.controller.exception.ErrorMessage;
+import com.podorozhnick.moneytracker.controller.exception.NoContentException;
+import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.service.CategoryService;
-import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,35 +28,27 @@ public class CategoriesController {
     private CategoryService categoryService;
 
     @GetMapping(GENERAL_REQUEST)
-    public ResponseEntity<List<Category>> getCategoryList() {
+    public ResponseEntity<List<Category>> getCategoryList() throws RestException {
         List<Category> categoryList = categoryService.list();
         if (CollectionUtils.isEmpty(categoryList)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new NoContentException();
         } else {
             return new ResponseEntity<>(categoryList, HttpStatus.OK);
         }
     }
 
     @PostMapping(GENERAL_REQUEST)
-    public ResponseEntity<Category> addCategory(@RequestBody String jsonCategory) {
-        Category category = JsonUtils.fromJson(Category.class, jsonCategory);
-        if (category == null) {
-            return new ResponseEntity("Bad Json", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         category = categoryService.add(category);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
 
     }
 
     @PutMapping(ID_REQUEST)
-    public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody String jsonCategory) {
+    public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category) throws RestException {
         Category loadedCategory = categoryService.getById(id);
         if (loadedCategory == null) {
-            return new ResponseEntity("Bad id", HttpStatus.BAD_REQUEST);
-        }
-        Category category = JsonUtils.fromJson(Category.class, jsonCategory);
-        if (category == null) {
-            return new ResponseEntity("Bad json", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(new ErrorMessage("Bad id"));
         }
         BeanUtils.copyProperties(category, loadedCategory);
         categoryService.save(loadedCategory);

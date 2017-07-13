@@ -9,6 +9,6 @@ public class NoContentException extends RestException {
     }
 
     public NoContentException() {
-        setErrorMessage(new ErrorMessage("No Content"));
+        super(new ErrorMessage("No Content"));
     }
 }

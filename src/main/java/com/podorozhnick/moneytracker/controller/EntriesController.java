@@ -1,10 +1,11 @@
 package com.podorozhnick.moneytracker.controller;
 
+import com.podorozhnick.moneytracker.controller.exception.BadRequestException;
+import com.podorozhnick.moneytracker.controller.exception.ErrorMessage;
 import com.podorozhnick.moneytracker.controller.exception.NoContentException;
 import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import com.podorozhnick.moneytracker.service.EntryService;
-import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,24 +37,16 @@ public class EntriesController {
     }
 
     @PostMapping(GENERAL_REQUEST)
-    public ResponseEntity<Entry> addEntry(@RequestBody String json) {
-        Entry entry = JsonUtils.fromJson(Entry.class, json);
-        if (entry == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Entry> addEntry(@RequestBody Entry entry) {
         entry = entryService.add(entry);
         return new ResponseEntity<>(entry, HttpStatus.CREATED);
     }
 
     @PutMapping(ID_REQUEST)
-    public ResponseEntity<Entry> editEntry(@PathVariable Long id, @RequestBody String json) {
+    public ResponseEntity<Entry> editEntry(@PathVariable Long id, @RequestBody Entry entry) throws RestException {
         Entry loadedEntry = entryService.getById(id);
         if (loadedEntry == null) {
-            return new ResponseEntity("Bad id", HttpStatus.BAD_REQUEST);
-        }
-        Entry entry = JsonUtils.fromJson(Entry.class, json);
-        if (entry == null) {
-            return new ResponseEntity("Bad json", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(new ErrorMessage("Bad id"));
         }
         BeanUtils.copyProperties(entry, loadedEntry);
         entryService.save(loadedEntry);
