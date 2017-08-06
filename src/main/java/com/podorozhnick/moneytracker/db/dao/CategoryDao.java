@@ -12,7 +12,8 @@ import java.util.List;
 public class CategoryDao extends AbstractDao<Long, Category> {
 
     public Category add(Category category) {
-        return persist(category);    }
+        return persist(category);
+    }
 
     public void save(Category category) {
         update(category);

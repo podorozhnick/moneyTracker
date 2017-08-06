@@ -26,6 +26,10 @@ public class Entry {
     @JsonProperty
     private Date date;
 
+    @Column(name = "sum")
+    @JsonProperty
+    private Double sum;
+
     @ManyToOne
     @JoinColumn(name = "categoryId")
     @JsonProperty
