@@ -21,4 +21,7 @@ public class UserDao extends AbstractDao<Long, User> {
         return getSingleResultOrNullFromQuery(criteriaQuery);
     }
 
+    public User add(User user) {
+        return persist(user);
+    }
 }
