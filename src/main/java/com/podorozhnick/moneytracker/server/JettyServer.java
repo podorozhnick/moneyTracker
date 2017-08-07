@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
@@ -70,7 +71,8 @@ public class JettyServer {
         dispatcherServlet.setDispatchOptionsRequest(true);
         contextHandler.addServlet(new ServletHolder(dispatcherServlet), MAPPING_URL);
         contextHandler.addEventListener(new ContextLoaderListener(context));
-
+        // Add spring security Filter
+        contextHandler.addFilter(new FilterHolder(new DelegatingFilterProxy("springSecurityFilterChain")), "/*", EnumSet.allOf(DispatcherType.class));
         return contextHandler;
     }
 
