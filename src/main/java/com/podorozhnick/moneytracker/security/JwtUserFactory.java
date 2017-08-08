@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class JwtUserFactory {
@@ -26,7 +27,7 @@ public final class JwtUserFactory {
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
 }
