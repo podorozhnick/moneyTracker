@@ -1,9 +1,11 @@
 package com.podorozhnick.moneytracker.security;
 
+import com.podorozhnick.moneytracker.server.AppSettings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -16,13 +18,14 @@ import java.util.Map;
 @Slf4j
 public class JwtTokenUtils {
 
-    public static final String CLAIM_NAME_KEY = "name";
-    public static final String CLAIM_ROLE_KEY = "role";
+    private static final String CLAIM_NAME_KEY = "name";
+    private static final String CLAIM_ROLE_KEY = "role";
+
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    @Autowired
+    private AppSettings settings;
 
     public String generateToken(JwtUser jwtUser) {
         Map<String, Object> claims = new HashMap<>();
@@ -32,7 +35,7 @@ public class JwtTokenUtils {
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
+        return new Date(System.currentTimeMillis() + settings.getTokenExpiration() * 1000);
     }
 
     private Boolean isTokenExpired(String token) {

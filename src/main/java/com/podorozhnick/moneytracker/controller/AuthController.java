@@ -39,7 +39,6 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) throws AuthenticationException {
 
-        // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getLogin(),
@@ -48,11 +47,9 @@ public class AuthController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Reload password post-security so we can generate token
         final JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(user.getLogin());
         final String token = jwtTokenUtils.generateToken(userDetails);
         setUserTokenCookie(request, response, token);
-        // Return the token
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
