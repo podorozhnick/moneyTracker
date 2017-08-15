@@ -1,0 +1,5 @@
+{
+  "host": "localhost",
+  "port": 8915,
+  "tokenExpiration": 84600
+}

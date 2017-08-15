@@ -1,10 +1,5 @@
 package com.podorozhnick.moneytracker.util;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +9,10 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +23,7 @@ public class JsonUtils {
 
     private static ObjectMapper objectMapper = getMapper();
 
-    public static ObjectMapper getMapper() {
+    private static ObjectMapper getMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         DateFormat dateFormat = new SimpleDateFormat(DATETIME_FORMAT_STRING);
         objectMapper.setDateFormat(dateFormat);
@@ -50,13 +45,22 @@ public class JsonUtils {
         return "";
     }
 
-    public static  <T> T fromJson(Class<T> clazz, String json) {
+    public static <T> T fromJson(Class<T> clazz, String json) {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException e) {
             log.error("Cannot object %s from a json %s", clazz, json);
         }
         return null;
+    }
+
+    public static <T> T fromJsonFile(Class<T> clazz, File file) {
+        try {
+            return objectMapper.readValue(file, clazz);
+        } catch (IOException e) {
+            log.error("Error in reading config file");
+            throw new RuntimeException(e);
+        }
     }
 
     public static <T> List<T> getListFromJson(Class<T[]> clazz, String json) {

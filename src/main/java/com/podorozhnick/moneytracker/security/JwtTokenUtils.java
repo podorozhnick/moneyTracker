@@ -1,6 +1,6 @@
 package com.podorozhnick.moneytracker.security;
 
-import com.podorozhnick.moneytracker.server.AppSettings;
+import com.podorozhnick.moneytracker.server.StartSettings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,7 +25,7 @@ public class JwtTokenUtils {
     private String secret;
 
     @Autowired
-    private AppSettings settings;
+    private StartSettings settings;
 
     public String generateToken(JwtUser jwtUser) {
         Map<String, Object> claims = new HashMap<>();
