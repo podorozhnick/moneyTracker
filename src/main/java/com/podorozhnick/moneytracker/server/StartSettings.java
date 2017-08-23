@@ -22,7 +22,7 @@ import java.io.File;
 public class StartSettings {
 
     @JsonProperty
-    private long tokenExpiration;
+    private int tokenExpiration;
     @JsonProperty
     private String host;
     @JsonProperty

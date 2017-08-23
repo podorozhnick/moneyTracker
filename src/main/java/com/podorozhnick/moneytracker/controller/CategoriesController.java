@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.CATEGORIES_CONTROLLER;
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.GENERAL_REQUEST;
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.ID_REQUEST;
+import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
 
 @Controller
 @RequestMapping(CATEGORIES_CONTROLLER)
@@ -32,9 +30,8 @@ public class CategoriesController {
         List<Category> categoryList = categoryService.list();
         if (CollectionUtils.isEmpty(categoryList)) {
             throw new NoContentException();
-        } else {
-            return new ResponseEntity<>(categoryList, HttpStatus.OK);
         }
+        return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
 
     @PostMapping(GENERAL_REQUEST)
