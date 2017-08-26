@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class JwtTokenUtils {
         String username;
         try {
             final Claims claims = getClaimsFromToken(token);
-            username = claims.get("name").toString();
+            username = claims.get(CLAIM_NAME_KEY).toString();
         } catch (Exception e) {
             username = null;
         }
@@ -86,13 +87,14 @@ public class JwtTokenUtils {
         return claims;
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String username = getUsernameFromToken(token);
-        return (
-                username.equals(user.getUsername())
-                        && !isTokenExpired(token)
-        );
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
+    }
+
+    public boolean validateToken(String token) {
+        return  !isTokenExpired(token) && !StringUtils.isEmpty(getUsernameFromToken(token));
     }
 
 

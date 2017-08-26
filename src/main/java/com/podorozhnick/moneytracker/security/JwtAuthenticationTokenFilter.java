@@ -1,5 +1,6 @@
 package com.podorozhnick.moneytracker.security;
 
+import com.podorozhnick.moneytracker.util.CookieUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,22 +27,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
 
-    @Value("${jwt.cookie.name}")
-    private String tokenCookie;
+    @Autowired
+    private CookieUtils cookieUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String authToken = null;
+        String authToken = cookieUtils.getTokenFromCookies(request).orElse("");
 
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                String name = cookie.getName();
-                if (name.equals(tokenCookie)) {
-                    authToken = cookie.getValue();
-                }
-            }
-        }
         String username = jwtTokenUtils.getUsernameFromToken(authToken);
 
         log.info("checking authentication for url " + request.getRequestURI());
