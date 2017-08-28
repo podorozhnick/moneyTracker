@@ -1,7 +1,11 @@
 package com.podorozhnick.moneytracker.config;
 
 import com.podorozhnick.moneytracker.server.JettyServer;
+import org.eclipse.jetty.rewrite.handler.RewriteHandler;
+import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -28,6 +32,15 @@ public class JettyConfig implements ApplicationContextAware {
     @Value("${jetty.context.path}")
     private String contextPath;
 
+    @Value("${jetty.rewrite.redirect.regex}")
+    private String redirectRegex;
+
+    @Value("${jetty.resource.base}")
+    private String resourceBase;
+
+    @Value("${jetty.welcome.file}")
+    private String welcomeFile;
+
     private ApplicationContext applicationContext;
 
     @Bean
@@ -38,8 +51,41 @@ public class JettyConfig implements ApplicationContextAware {
     @Bean
     public Server server() throws IOException {
         Server server = new Server();
-        server.setHandler(servletContext());
+        server.setHandler(getHandlers());
         return server;
+    }
+
+    @Bean
+    public HandlerList getHandlers() throws IOException {
+        HandlerList handlers = new HandlerList();
+        handlers.addHandler(getRewriteHandler());
+        handlers.addHandler(getResourceHandler());
+        handlers.addHandler(servletContext());
+        return handlers;
+    }
+
+    @Bean
+    public ResourceHandler getResourceHandler() {
+        ResourceHandler webResourceHandler = new ResourceHandler();
+        webResourceHandler.setDirectoriesListed(true);
+        webResourceHandler.setWelcomeFiles(new String[] { welcomeFile });
+        webResourceHandler.setResourceBase(resourceBase);
+        return webResourceHandler;
+    }
+
+    @Bean
+    public RewriteHandler getRewriteHandler() {
+        RewriteHandler rewrite = new RewriteHandler();
+        rewrite.setRewriteRequestURI(true);
+        rewrite.setRewritePathInfo(true);
+        rewrite.setOriginalPathAttribute("requestedPath");
+        RewriteRegexRule redirect = new RewriteRegexRule();
+        redirect.setRegex(redirectRegex);
+        redirect.setHandling(false);
+        redirect.setReplacement("/".concat(welcomeFile));
+        redirect.setTerminating(false);
+        rewrite.addRule(redirect);
+        return rewrite;
     }
 
     @Bean
