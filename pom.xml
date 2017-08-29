@@ -180,7 +180,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.podorozhnick.moneytracker.server.JettyServer</mainClass>
+                                    <mainClass>com.podorozhnick.moneytracker.Application</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
