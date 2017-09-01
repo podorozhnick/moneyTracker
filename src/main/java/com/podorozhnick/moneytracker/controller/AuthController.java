@@ -1,11 +1,12 @@
 package com.podorozhnick.moneytracker.controller;
 
+import com.podorozhnick.moneytracker.controller.exception.NotAuthorizedResponseException;
+import com.podorozhnick.moneytracker.controller.exception.ResponseException;
 import com.podorozhnick.moneytracker.db.model.User;
 import com.podorozhnick.moneytracker.security.JwtTokenUtils;
 import com.podorozhnick.moneytracker.security.JwtUser;
 import com.podorozhnick.moneytracker.service.UserService;
 import com.podorozhnick.moneytracker.util.CookieUtils;
-import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,19 +68,19 @@ public class AuthController {
     }
 
     @GetMapping(AUTH_CONTROLLER_STATUS)
-    public ResponseEntity<User> getAuthStatus(HttpServletResponse response, HttpServletRequest request) {
+    public ResponseEntity<User> getAuthStatus(HttpServletResponse response, HttpServletRequest request) throws ResponseException {
         Optional<String> token = cookieUtils.getTokenFromCookies(request);
         if (!token.isPresent()) {
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+            throw new NotAuthorizedResponseException();
         }
         if (!jwtTokenUtils.validateToken(token.get())) {
             cookieUtils.addTokenCookie(response, null);
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+            throw new NotAuthorizedResponseException();
         }
         User user = userService.getByLogin(jwtTokenUtils.getUsernameFromToken(token.get()));
         if (user == null) {
             cookieUtils.addTokenCookie(response, null);
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+            throw new NotAuthorizedResponseException();
         }
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
