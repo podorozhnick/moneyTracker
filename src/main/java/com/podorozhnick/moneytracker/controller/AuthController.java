@@ -1,5 +1,6 @@
 package com.podorozhnick.moneytracker.controller;
 
+import com.podorozhnick.moneytracker.controller.exception.AlreadyLoggedResponseException;
 import com.podorozhnick.moneytracker.controller.exception.NotAuthorizedResponseException;
 import com.podorozhnick.moneytracker.controller.exception.ResponseException;
 import com.podorozhnick.moneytracker.db.model.User;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -50,10 +50,9 @@ public class AuthController {
     private CookieUtils cookieUtils;
 
     @PostMapping(AUTH_CONTROLLER_LOGIN)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) throws AuthenticationException {
-
+    public ResponseEntity login(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) throws ResponseException {
         Optional<String> token = cookieUtils.getTokenFromCookies(request);
-        if (!token.isPresent() || jwtTokenUtils.validateToken(token.get())) {
+        if (!token.isPresent() || !jwtTokenUtils.validateToken(token.get())) {
             final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getLogin(), user.getPassword()
                 )
@@ -62,9 +61,9 @@ public class AuthController {
             final JwtUser userDetails = (JwtUser) userDetailsService.loadUserByUsername(user.getLogin());
             final String newToken = jwtTokenUtils.generateToken(userDetails);
             cookieUtils.addTokenCookie(response, newToken);
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         }
-        return new ResponseEntity<Object>(HttpStatus.NOT_MODIFIED);
+        throw new AlreadyLoggedResponseException();
     }
 
     @GetMapping(AUTH_CONTROLLER_STATUS)

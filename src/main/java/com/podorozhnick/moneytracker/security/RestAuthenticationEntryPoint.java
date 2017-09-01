@@ -1,5 +1,7 @@
 package com.podorozhnick.moneytracker.security;
 
+import com.podorozhnick.moneytracker.controller.exception.BadCredentialsResponseException;
+import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -14,7 +16,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        httpServletResponse.getWriter().write(JsonUtils.toJson(new BadCredentialsResponseException().getResponseMessage()));
     }
 
 }
