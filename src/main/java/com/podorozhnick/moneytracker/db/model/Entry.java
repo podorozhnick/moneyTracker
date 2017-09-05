@@ -30,7 +30,7 @@ public class Entry {
     @JsonProperty
     private Double sum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId")
     @JsonProperty
     private Category category;

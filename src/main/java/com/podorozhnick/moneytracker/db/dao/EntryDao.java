@@ -1,12 +1,13 @@
 package com.podorozhnick.moneytracker.db.dao;
 
-import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
@@ -24,7 +25,10 @@ public class EntryDao extends AbstractDao<Long, Entry> {
         CriteriaBuilder builder = getCriteriaBuilder();
         EntityManager em = getEntityManager();
         CriteriaQuery<Entry> criteriaQuery = builder.createQuery(Entry.class);
-        criteriaQuery.select(criteriaQuery.from(Entry.class));
+        Root<Entry> root = criteriaQuery.from(Entry.class);
+        criteriaQuery.select(root);
+        criteriaQuery.select(root).distinct(true);
+        root.fetch("category", JoinType.LEFT);
         return em.createQuery(criteriaQuery).getResultList();
     }
 
