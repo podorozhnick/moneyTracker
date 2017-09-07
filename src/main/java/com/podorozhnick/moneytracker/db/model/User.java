@@ -1,6 +1,5 @@
 package com.podorozhnick.moneytracker.db.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -12,26 +11,27 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class User {
+public class User extends DbEntity {
 
-    @Id
-    @GeneratedValue
-    @JsonProperty
-    private long id;
+    private static final String NAME_FIELD = "name";
+    private static final String SURNAME_FIELD = "surname";
+    private static final String EMAIL_FIELD = "email";
+    private static final String LOGIN_FIELD = "login";
+    private static final String PASSWORD_FIELD = "password";
 
-    @Column(name = "name")
+    @Column(name = NAME_FIELD)
     private String name;
 
-    @Column(name = "surname")
+    @Column(name = SURNAME_FIELD)
     private String surname;
 
-    @Column(name = "email")
+    @Column(name = EMAIL_FIELD)
     private String email;
 
-    @Column(name = "login")
+    @Column(name = LOGIN_FIELD)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = PASSWORD_FIELD)
     private String password;
 
 }

@@ -15,18 +15,16 @@ import javax.persistence.*;
 @Setter
 @Accessors(chain = true)
 @ToString
-public class Category {
+public class Category extends DbEntity {
 
-    @Id
-    @GeneratedValue
-    @JsonProperty
-    private long id;
+    private static final String TYPE_FIELD = "type";
+    private static final String NAME_FIELD = "name";
 
-    @Column(name = "name")
+    @Column(name = NAME_FIELD)
     @JsonProperty
     private String name;
 
-    @Column(name = "type")
+    @Column(name = TYPE_FIELD)
     @Enumerated(EnumType.STRING)
     @JsonProperty
     private CategoryType type;

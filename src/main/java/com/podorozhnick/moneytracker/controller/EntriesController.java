@@ -5,6 +5,8 @@ import com.podorozhnick.moneytracker.controller.exception.ErrorMessage;
 import com.podorozhnick.moneytracker.controller.exception.NoContentException;
 import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Entry;
+import com.podorozhnick.moneytracker.pojo.EntrySearchFilter;
+import com.podorozhnick.moneytracker.pojo.EntrySearchResult;
 import com.podorozhnick.moneytracker.service.EntryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.ENTRIES_CONTROLLER;
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.GENERAL_REQUEST;
-import static com.podorozhnick.moneytracker.controller.ControllerAPI.ID_REQUEST;
+import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
 
 @Controller
 @RequestMapping(ENTRIES_CONTROLLER)
@@ -34,6 +34,12 @@ public class EntriesController {
             throw new NoContentException();
         }
         return new ResponseEntity<>(entryList, HttpStatus.OK);
+    }
+
+    @PostMapping(ENTRIES_CONTROLLER_FILTER)
+    public ResponseEntity<EntrySearchResult> filterEntries(@RequestBody EntrySearchFilter entrySearchFilter) {
+        EntrySearchResult result = entryService.filter(entrySearchFilter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(GENERAL_REQUEST)

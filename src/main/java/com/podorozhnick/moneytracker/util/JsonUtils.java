@@ -1,5 +1,6 @@
 package com.podorozhnick.moneytracker.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,24 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 public class JsonUtils {
 
-    private static final String DATETIME_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ssz";
-
     private static ObjectMapper objectMapper = getMapper();
 
     private static ObjectMapper getMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        DateFormat dateFormat = new SimpleDateFormat(DATETIME_FORMAT_STRING);
-        objectMapper.setDateFormat(dateFormat);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         SimpleModule m = new SimpleModule();
         m.addSerializer(long.class, new ToStringSerializer());
         m.addSerializer(Long.class, new ToStringSerializer());
@@ -70,6 +66,10 @@ public class JsonUtils {
             log.error("Cannot object %s from a json %s", clazz, json);
         }
         return Collections.emptyList();
+    }
+
+    public static ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 
 }
