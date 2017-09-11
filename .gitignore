@@ -1,6 +1,8 @@
 *.iml
+*.ini
 /.idea
 /.dropbox
 /data
 /target
 /logs
+/web
