@@ -1,17 +1,21 @@
 package com.podorozhnick.moneytracker.db.dao;
 
+import com.podorozhnick.moneytracker.db.model.DbEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.Optional;
 
-public abstract class AbstractDao<PK extends Serializable, T> {
+public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
 
     private final Class<T> persistentClass;
 
@@ -23,8 +27,12 @@ public abstract class AbstractDao<PK extends Serializable, T> {
     @Autowired
     private SessionFactory sessionFactory;
 
-    protected Session getSession(){
+    private Session getSession(){
         return sessionFactory.getCurrentSession();
+    }
+
+    public Class<T> getPersistentClass() {
+        return persistentClass;
     }
 
     @SuppressWarnings("unchecked")
@@ -32,11 +40,11 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         return (T) getSession().get(persistentClass, key);
     }
 
-    public T persist(T entity) {
+    T persist(T entity) {
         return (T)getSession().merge(entity);
     }
 
-    public void update(T entity) {
+    void update(T entity) {
         getSession().update(entity);
     }
 
@@ -44,21 +52,32 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         getSession().delete(entity);
     }
 
-    protected CriteriaBuilder getCriteriaBuilder(){
+    CriteriaBuilder getCriteriaBuilder(){
         return getSession().getEntityManagerFactory().getCriteriaBuilder();
     }
 
-    protected EntityManager getEntityManager() {
+    EntityManager getEntityManager() {
         return getSession().getEntityManagerFactory().createEntityManager();
     }
 
-    protected T getSingleResultOrNullFromQuery(CriteriaQuery<T> criteriaQuery) {
-        T result = null;
-        try {
-            result = getEntityManager().createQuery(criteriaQuery).getSingleResult();
-        } catch (NoResultException e) {
-        }
-        return result;
+    Optional<T> getSingleResult(CriteriaQuery<T> criteriaQuery) {
+        return Optional.ofNullable(getEntityManager().createQuery(criteriaQuery).getSingleResult());
+    }
+
+    <CT> Optional<CT> getCustomSingleResult(CriteriaQuery<CT> criteriaQuery) {
+        return Optional.ofNullable(getEntityManager().createQuery(criteriaQuery).getSingleResult());
+    }
+
+    List<T> getPagedResult(CriteriaQuery<T> query, int page, int size) {
+        TypedQuery<T> typedQuery = getEntityManager().createQuery(query);
+        typedQuery.setMaxResults(size).setFirstResult(page * size);
+        return typedQuery.getResultList();
+    }
+
+    long getCountByQuery(CriteriaQuery<Long> query, Root<T> root) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        query.select(builder.count(root.get(T.ID_FIELD)));
+        return getCustomSingleResult(query).orElse(0L);
     }
 
 }

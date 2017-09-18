@@ -1,6 +1,5 @@
 package com.podorozhnick.moneytracker.pojo;
 
-import com.podorozhnick.moneytracker.pojo.enums.SortType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +17,6 @@ public class EntrySearchFilter {
 
     private int count;
 
-    private String sortField;
-
-    private SortType sortType;
+    private SortFilter sortFilter;
 
 }

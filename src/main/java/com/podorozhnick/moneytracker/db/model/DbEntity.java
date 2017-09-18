@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @Getter
-class DbEntity {
+public class DbEntity {
 
     public static final String ID_FIELD = "id";
 

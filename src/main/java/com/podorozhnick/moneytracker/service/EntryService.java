@@ -35,10 +35,11 @@ public class EntryService {
     }
 
     public EntrySearchResult filter(EntrySearchFilter filter) {
-        List<Entry> entries = entryDao.filter(filter.getFrom(), filter.getTo(), filter.getPage(), filter.getCount(),
-                filter.getSortField(), filter.getSortType());
+        List<Entry> entries = entryDao.filter(filter.getFrom(), filter.getTo(),
+                filter.getPage(), filter.getCount(), filter.getSortFilter());
         long count = entryDao.count(filter.getFrom(), filter.getTo());
-        return new EntrySearchResult(entries, (int) (count / filter.getCount()), filter.getPage());
+        int pages = (int) (count / filter.getCount());
+        return new EntrySearchResult(entries, pages, filter.getPage());
 
     }
     
