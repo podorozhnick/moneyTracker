@@ -1,12 +1,15 @@
 package com.podorozhnick.moneytracker.controller;
 
 import com.podorozhnick.moneytracker.TestHelper;
+import com.podorozhnick.moneytracker.controller.advice.RestErrorHandler;
+import com.podorozhnick.moneytracker.controller.exception.NoContentException;
 import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.db.model.enums.CategoryType;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import com.podorozhnick.moneytracker.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -37,12 +40,20 @@ public class CategoriesControllerTest extends ControllerTest {
     @InjectMocks
     private CategoriesController categoriesController;
 
+    private static RestErrorHandler restErrorHandler;
+
+    @BeforeClass
+    public static void beforeClass() {
+        restErrorHandler = new RestErrorHandler();
+    }
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(categoriesController)
                 .setMessageConverters(mappingJackson2HttpMessageConverter)
+                .setControllerAdvice(restErrorHandler)
                 .build();
     }
 
@@ -56,6 +67,30 @@ public class CategoriesControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().string(JsonUtils.toJson(categoryList)));
+        verify(categoryService, times(1)).list();
+        verifyNoMoreInteractions(categoryService);
+    }
+
+    @Test
+    public void getCategoryListWithEmptyListTest() throws Exception {
+        String request = ControllerAPI.CATEGORIES_CONTROLLER.concat(ControllerAPI.GENERAL_REQUEST);
+        when(categoryService.list()).thenReturn(new ArrayList<>());
+        mockMvc.perform(get(request))
+                .andExpect(status().isNoContent())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().string(JsonUtils.toJson(new NoContentException().getErrorMessage())));
+        verify(categoryService, times(1)).list();
+        verifyNoMoreInteractions(categoryService);
+    }
+
+    @Test
+    public void getCategoryListWithNullTest() throws Exception {
+        String request = ControllerAPI.CATEGORIES_CONTROLLER.concat(ControllerAPI.GENERAL_REQUEST);
+        when(categoryService.list()).thenReturn(null);
+        mockMvc.perform(get(request))
+                .andExpect(status().isNoContent())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().string(JsonUtils.toJson(new NoContentException().getErrorMessage())));
         verify(categoryService, times(1)).list();
         verifyNoMoreInteractions(categoryService);
     }

@@ -12,7 +12,12 @@ public abstract class AbstractTest {
     @Rule
     public TestRule watcher = new TestWatcher() {
         protected void starting(Description description) {
-            log.info("TEST: {} - {}()", description.getTestClass().getSimpleName(), description.getMethodName());
+            log.info("TEST: {} - {}(){}STARTED", description.getTestClass().getSimpleName(), description.getMethodName(), "\t");
+        }
+
+        @Override
+        protected void finished(Description description) {
+            log.info("TEST: {} - {}(){}FINISHED", description.getTestClass().getSimpleName(), description.getMethodName(), "\t");
         }
     };
 
