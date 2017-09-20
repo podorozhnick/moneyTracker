@@ -15,10 +15,6 @@ public class CategoryDao extends AbstractDao<Long, Category> {
         return persist(category);
     }
 
-    public void save(Category category) {
-        update(category);
-    }
-
     public Category findByName(String name) {
         CriteriaBuilder builder = getCriteriaBuilder();
         EntityManager em = getEntityManager();

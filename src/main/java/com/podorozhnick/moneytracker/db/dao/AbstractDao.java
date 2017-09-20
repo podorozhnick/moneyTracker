@@ -44,12 +44,14 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         return (T)getSession().merge(entity);
     }
 
-    void update(T entity) {
+    public T update(T entity) {
         getSession().update(entity);
+        return entity;
     }
 
-    public void delete(T entity) {
+    public T delete(T entity) {
         getSession().delete(entity);
+        return entity;
     }
 
     CriteriaBuilder getCriteriaBuilder(){
@@ -78,6 +80,13 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         CriteriaBuilder builder = getCriteriaBuilder();
         query.select(builder.count(root.get(T.ID_FIELD)));
         return getCustomSingleResult(query).orElse(0L);
+    }
+
+    public boolean isExistsById(Long id) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<T> root = query.from(getPersistentClass());
+        return getCountByQuery(query, root) > 0;
     }
 
 }

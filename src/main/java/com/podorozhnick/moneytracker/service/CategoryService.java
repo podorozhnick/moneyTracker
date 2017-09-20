@@ -15,14 +15,16 @@ public class CategoryService {
     @Autowired
     private CategoryDao categoryDao;
 
-    public void save(Category category) {
-        categoryDao.save(category);
+    public Category update(Category category) {
+        return categoryDao.update(category);
     }
 
     public Category add(Category category) {
-        category = categoryDao.add(category);
-        return category;
+        return categoryDao.add(category);
+    }
 
+    public Category delete(Category category) {
+        return categoryDao.delete(category);
     }
 
     public List<Category> list() {
@@ -31,6 +33,10 @@ public class CategoryService {
 
     public Category getById(Long id) {
         return categoryDao.getByKey(id);
+    }
+
+    public boolean isExistsById(Long id) {
+        return categoryDao.isExistsById(id);
     }
 
 }

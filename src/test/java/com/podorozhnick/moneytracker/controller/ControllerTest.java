@@ -5,7 +5,7 @@ import com.podorozhnick.moneytracker.AbstractTest;
 import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-public abstract class ControllerTest extends AbstractTest {
+abstract class ControllerTest extends AbstractTest {
 
     static MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 

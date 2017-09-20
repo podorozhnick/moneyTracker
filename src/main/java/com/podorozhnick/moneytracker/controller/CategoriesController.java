@@ -7,7 +7,6 @@ import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,13 +42,21 @@ public class CategoriesController {
 
     @PutMapping(ID_REQUEST)
     public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category) throws RestException {
-        Category loadedCategory = categoryService.getById(id);
-        if (loadedCategory == null) {
+        if (!categoryService.isExistsById(id)) {
             throw new BadRequestException(new ErrorMessage("Bad id"));
         }
-        BeanUtils.copyProperties(category, loadedCategory);
-        categoryService.save(loadedCategory);
-        return new ResponseEntity<>(loadedCategory, HttpStatus.CREATED);
+        category = categoryService.update(category);
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    @DeleteMapping(ID_REQUEST)
+    public ResponseEntity<Category> deleteCategory(@PathVariable Long id) throws RestException {
+        Category category = categoryService.getById(id);
+        if (category == null) {
+            throw new BadRequestException(new ErrorMessage("Bad id"));
+        }
+        category = categoryService.delete(category);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
 }
