@@ -55,9 +55,18 @@ public class EntriesController {
             throw new BadRequestException(new ErrorMessage("Bad id"));
         }
         BeanUtils.copyProperties(entry, loadedEntry);
-        entryService.save(loadedEntry);
+        entryService.update(loadedEntry);
         return new ResponseEntity<>(loadedEntry, HttpStatus.CREATED);
+    }
 
+    @DeleteMapping(ID_REQUEST)
+    public ResponseEntity<Entry> deleteEntry(@PathVariable Long id) throws RestException {
+        Entry entry = entryService.getById(id);
+        if (entry == null) {
+            throw new BadRequestException(new ErrorMessage("Bad id"));
+        }
+        entry = entryService.delete(entry);
+        return new ResponseEntity<>(entry, HttpStatus.OK);
     }
 
 

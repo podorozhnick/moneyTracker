@@ -29,4 +29,8 @@ public class Category extends DbEntity {
     @JsonProperty
     private CategoryType type;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn
+//    private User user;
+
 }

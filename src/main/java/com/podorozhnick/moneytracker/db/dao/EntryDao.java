@@ -17,10 +17,6 @@ public class EntryDao extends AbstractDao<Long, Entry> {
         return persist(entry);
     }
 
-    public void save(Entry entry) {
-        update(entry);
-    }
-
     public List<Entry> filter(Date from, Date to, int page, int size, SortFilter sortFilter) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Entry> query = builder.createQuery(Entry.class);

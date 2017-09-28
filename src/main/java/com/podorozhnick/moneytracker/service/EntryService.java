@@ -17,13 +17,16 @@ public class EntryService {
     @Autowired
     private EntryDao entryDao;
 
-    public void save(Entry entry) {
-        entryDao.save(entry);
+    public void update(Entry entry) {
+        entryDao.update(entry);
+    }
+
+    public Entry delete(Entry entry) {
+        return entryDao.delete(entry);
     }
 
     public Entry add(Entry entry) {
-        entry = entryDao.add(entry);
-        return entry;
+        return entryDao.add(entry);
     }
 
     public List<Entry> list() {
