@@ -29,7 +29,7 @@ public class EntriesController {
 
     @GetMapping(GENERAL_REQUEST)
     public ResponseEntity<List<Entry>> getEntryList() throws RestException {
-        List<Entry> entryList = entryService.list();
+        List<Entry> entryList = entryService.listJoinCategory();
         if (CollectionUtils.isEmpty(entryList)) {
             throw new NoContentException();
         }

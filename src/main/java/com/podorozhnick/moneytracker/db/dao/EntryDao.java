@@ -5,7 +5,6 @@ import com.podorozhnick.moneytracker.pojo.SortFilter;
 import com.podorozhnick.moneytracker.pojo.enums.SortType;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +23,7 @@ public class EntryDao extends AbstractDao<Long, Entry> {
         query.select(root).distinct(true);
         query.where(createFilterPredicate(root, from, to));
         query.orderBy(getOrder(sortFilter, root));
-        root.fetch(Entry.CATEGORY_FIELD, JoinType.LEFT);
-        return getPagedResult(query, page, size);
+        return getPagedResult(query, page, size, createFetchGraphHint(Entry.ENTRY_CATEGORY_GRAPH));
     }
 
     private <T> Order getOrder(SortFilter sortFilter, Root<T> root) {
@@ -48,14 +46,8 @@ public class EntryDao extends AbstractDao<Long, Entry> {
         return getCountByQuery(query, root);
     }
 
-    public List<Entry> findAll() {
-        CriteriaBuilder builder = getCriteriaBuilder();
-        EntityManager em = getEntityManager();
-        CriteriaQuery<Entry> criteriaQuery = builder.createQuery(Entry.class);
-        Root<Entry> root = criteriaQuery.from(Entry.class);
-        criteriaQuery.select(root).distinct(true);
-        root.fetch(Entry.CATEGORY_FIELD, JoinType.LEFT);
-        return em.createQuery(criteriaQuery).getResultList();
+    public List<Entry> findAllJoinCategory() {
+        return findAll(createFetchGraphHint(Entry.ENTRY_CATEGORY_GRAPH));
     }
 
     private Predicate createFilterPredicate(Root<Entry> root, Date from, Date to) {

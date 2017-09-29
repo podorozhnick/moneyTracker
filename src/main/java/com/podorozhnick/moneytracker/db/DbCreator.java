@@ -19,6 +19,8 @@ import java.util.List;
 @Component
 public class DbCreator {
 
+    private static final String ADMIN_LOGIN = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
     private final CategoryService categoryService;
 
     private final EntryService entryService;
@@ -34,38 +36,38 @@ public class DbCreator {
 
     @PostConstruct
     public void init() {
-        createUsers();
-        List<Category> categories = createCategories();
+        User admin = createAdmin();
+        List<Category> categories = createCategories(admin);
         createEntries(categories);
     }
 
-    private void createUsers() {
+    private User createAdmin() {
         User user = new User();
-        user.setLogin("admin").setPassword("admin");
-        if (userService.getByLogin("admin") == null) {
-            userService.add(user);
+        user.setLogin(ADMIN_LOGIN).setPassword(ADMIN_PASSWORD);
+        User loaded = userService.getByLogin(ADMIN_LOGIN);
+        if (loaded == null) {
+            loaded = userService.add(user);
         }
+        return loaded;
     }
 
     private void createEntries(List<Category> categories) {
         if (CollectionUtils.isEmpty(categories))
             return;
         for (Category category: categories) {
-            Entry entry = new Entry();
-            entry.setDate(new Date());
-            entry.setCategory(category);
-            entry.setDescription("Big expenses");
+            Entry entry = new Entry().setDate(new Date()).setCategory(category)
+                    .setDescription("Big expenses").setSum(55d);
             entryService.add(entry);
         }
     }
 
-    private List<Category> createCategories() {
+    private List<Category> createCategories(User user) {
         List<Category> categoryList = new ArrayList<>();
         Category category = new Category();
-        category.setName("TestInput").setType(CategoryType.INCOMES);
+        category.setName("TestInput").setType(CategoryType.INCOMES).setUser(user);
         categoryList.add(categoryService.add(category));
         Category category1 = new Category();
-        category1.setName("TestOutput").setType(CategoryType.EXPENSES);
+        category1.setName("TestOutput").setType(CategoryType.EXPENSES).setUser(user);
         categoryList.add(categoryService.add(category1));
         return categoryList;
     }

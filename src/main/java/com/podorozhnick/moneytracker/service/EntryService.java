@@ -29,8 +29,8 @@ public class EntryService {
         return entryDao.add(entry);
     }
 
-    public List<Entry> list() {
-        return entryDao.findAll();
+    public List<Entry> listJoinCategory() {
+        return entryDao.findAllJoinCategory();
     }
 
     public Entry getById(Long id) {

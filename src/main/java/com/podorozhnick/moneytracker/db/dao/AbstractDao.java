@@ -3,24 +3,25 @@ package com.podorozhnick.moneytracker.db.dao;
 import com.podorozhnick.moneytracker.db.model.DbEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
 
     private final Class<T> persistentClass;
 
     @SuppressWarnings("unchecked")
-    public AbstractDao(){
+    AbstractDao(){
         this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
@@ -31,7 +32,7 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         return sessionFactory.getCurrentSession();
     }
 
-    public Class<T> getPersistentClass() {
+    protected Class<T> getPersistentClass() {
         return persistentClass;
     }
 
@@ -40,6 +41,7 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         return (T) getSession().get(persistentClass, key);
     }
 
+    @SuppressWarnings("unchecked")
     T persist(T entity) {
         return (T)getSession().merge(entity);
     }
@@ -62,24 +64,38 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         return getSession().getEntityManagerFactory().createEntityManager();
     }
 
-    Optional<T> getSingleResult(CriteriaQuery<T> criteriaQuery) {
-        return Optional.ofNullable(getEntityManager().createQuery(criteriaQuery).getSingleResult());
+    public List<T> findAll() {
+        return findAll(Collections.emptyMap());
     }
 
-    <CT> Optional<CT> getCustomSingleResult(CriteriaQuery<CT> criteriaQuery) {
-        return Optional.ofNullable(getEntityManager().createQuery(criteriaQuery).getSingleResult());
+    List<T> findAll(Map<String, Object> hints) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(getPersistentClass());
+        query.from(getPersistentClass());
+        return createQuery(query, hints).getResultList();
+    }
+
+    <CT> Optional<CT> getSingleResult(CriteriaQuery<CT> criteriaQuery) {
+        try {
+            return Optional.of(createQuery(criteriaQuery).getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+    List<T> getPagedResult(CriteriaQuery<T> query, int page, int size, Map<String, Object> hints) {
+        TypedQuery<T> typedQuery = createQuery(query, hints);
+        typedQuery.setMaxResults(size).setFirstResult(page * size);
+        return typedQuery.getResultList();
     }
 
     List<T> getPagedResult(CriteriaQuery<T> query, int page, int size) {
-        TypedQuery<T> typedQuery = getEntityManager().createQuery(query);
-        typedQuery.setMaxResults(size).setFirstResult(page * size);
-        return typedQuery.getResultList();
+        return getPagedResult(query, page, size, Collections.emptyMap());
     }
 
     long getCountByQuery(CriteriaQuery<Long> query, Root<T> root) {
         CriteriaBuilder builder = getCriteriaBuilder();
         query.select(builder.count(root.get(T.ID_FIELD)));
-        return getCustomSingleResult(query).orElse(0L);
+        return getSingleResult(query).orElse(0L);
     }
 
     public boolean isExistsById(Long id) {
@@ -87,6 +103,24 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<T> root = query.from(getPersistentClass());
         return getCountByQuery(query, root) > 0;
+    }
+
+    <CT> TypedQuery<CT> createQuery(CriteriaQuery<CT> query) {
+        return createQuery(query, Collections.emptyMap());
+    }
+
+    <CT> TypedQuery<CT> createQuery(CriteriaQuery<CT> query, Map<String, Object> hints) {
+        TypedQuery<CT> typedQuery = getEntityManager().createQuery(query);
+        for (Map.Entry<String, Object> entry: hints.entrySet()) {
+            typedQuery.setHint(entry.getKey(), entry.getValue());
+        }
+        return typedQuery;
+    }
+
+    Map<String, Object> createFetchGraphHint(String fetchGraphName) {
+        Map<String, Object> hints = new HashMap<>();
+        hints.put(QueryHints.LOADGRAPH, getSession().getEntityGraph(fetchGraphName));
+        return hints;
     }
 
 }

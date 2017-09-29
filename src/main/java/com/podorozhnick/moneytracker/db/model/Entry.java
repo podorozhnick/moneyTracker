@@ -11,11 +11,14 @@ import java.util.Date;
 
 @Entity
 @Table(name = "entry")
+@NamedEntityGraph(name = Entry.ENTRY_CATEGORY_GRAPH, attributeNodes = @NamedAttributeNode(Entry.CATEGORY_FIELD))
 @Getter
 @Setter
 @Accessors(chain = true)
-@ToString
+@ToString(exclude = {Entry.CATEGORY_FIELD})
 public class Entry extends DbEntity {
+
+    public static final String ENTRY_CATEGORY_GRAPH = "Entry[Category]";
 
     public static final String DATE_FIELD = "date";
     private static final String SUM_FIELD = "sum";
