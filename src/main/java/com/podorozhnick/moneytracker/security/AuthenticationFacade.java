@@ -14,8 +14,8 @@ public class AuthenticationFacade {
     private UserService userService;
 
     public User getAuthenticatedUser() {
-        String name = getAuthentication().getName();
-        return userService.getByLogin(name);
+//        String name = getAuthentication().getName();
+        return null;
     }
 
     private Authentication getAuthentication() {

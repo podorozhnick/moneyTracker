@@ -3,6 +3,7 @@ package com.podorozhnick.moneytracker.config;
 import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,6 +25,9 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedOrigins("*")
+                .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(), HttpMethod.DELETE.name(),
+                        HttpMethod.OPTIONS.name())
                 .allowCredentials(false).maxAge(3600);
     }
 
