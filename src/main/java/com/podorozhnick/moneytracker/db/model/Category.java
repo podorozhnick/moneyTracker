@@ -38,7 +38,7 @@ public class Category extends DbEntity {
     @JsonIgnore
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = Entry.CATEGORY_FIELD)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = Entry.CATEGORY_FIELD, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Entry> entries;
 
