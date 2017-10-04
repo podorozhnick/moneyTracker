@@ -12,19 +12,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class DbCreator {
 
     private static final String ADMIN_LOGIN = "admin";
     private static final String ADMIN_PASSWORD = "admin";
+    private static final Map<String, CategoryType> categoriesMap = new HashMap<>();
+    private static final Random RANDOM = new Random();
+
+    static {
+        categoriesMap.put("TestInput", CategoryType.INCOMES);
+        categoriesMap.put("TestOutput", CategoryType.EXPENSES);
+    }
+
     private final CategoryService categoryService;
-
     private final EntryService entryService;
-
     private final UserService userService;
 
     @Autowired
@@ -56,19 +60,24 @@ public class DbCreator {
             return;
         for (Category category: categories) {
             Entry entry = new Entry().setDate(new Date()).setCategory(category)
-                    .setDescription("Big expenses").setSum(55d);
+                    .setDescription("Test expenses").setSum(RANDOM.nextDouble() * 1000);
             entryService.add(entry);
         }
     }
 
     private List<Category> createCategories(User user) {
         List<Category> categoryList = new ArrayList<>();
-        Category category = new Category();
-        category.setName("TestInput").setType(CategoryType.INCOMES).setUser(user);
-        categoryList.add(categoryService.add(category));
-        Category category1 = new Category();
-        category1.setName("TestOutput").setType(CategoryType.EXPENSES).setUser(user);
-        categoryList.add(categoryService.add(category1));
+        for (Map.Entry<String, CategoryType> entry: categoriesMap.entrySet()) {
+            Optional<Category> byName = categoryService.getByName(entry.getKey());
+            if (byName.isPresent()) {
+                categoryList.add(byName.get());
+            } else {
+                Category category = new Category();
+                category.setName(entry.getKey()).setType(entry.getValue())
+                        .setUser(user);
+                categoryList.add(categoryService.add(category));
+            }
+        }
         return categoryList;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,8 +25,18 @@ public class CategoryService {
     }
 
     public Category add(Category category) {
-        category.setUser(authenticationFacade.getAuthenticatedUser());
+        setCurrentUserIfNotExist(category);
         return categoryDao.add(category);
+    }
+
+    private void setCurrentUserIfNotExist(Category category) {
+        if (category.getUser() == null) {
+            category.setUser(authenticationFacade.getAuthenticatedUser());
+        }
+    }
+
+    public Optional<Category> getByName(String name) {
+        return categoryDao.getByName(name);
     }
 
     public Category delete(Category category) {

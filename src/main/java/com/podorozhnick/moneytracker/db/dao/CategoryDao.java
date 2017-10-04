@@ -15,7 +15,7 @@ public class CategoryDao extends AbstractDao<Long, Category> {
         return persist(category);
     }
 
-    public Optional<Category> findByName(String name) {
+    public Optional<Category> getByName(String name) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Category> criteriaQuery = builder.createQuery(Category.class);
         Root<Category> root = criteriaQuery.from(Category.class);
