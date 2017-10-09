@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class JsonUtils {
         m.addSerializer(long.class, new ToStringSerializer());
         m.addSerializer(Long.class, new ToStringSerializer());
         objectMapper.registerModule(m);
+        objectMapper.registerModule(new Hibernate5Module());
         return objectMapper;
     }
 
