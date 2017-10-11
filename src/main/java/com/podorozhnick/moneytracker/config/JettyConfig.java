@@ -20,6 +20,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.EnumSet;
 
@@ -60,7 +61,7 @@ public class JettyConfig implements ApplicationContextAware {
         HandlerList handlers = new HandlerList();
         handlers.addHandler(getRewriteHandler());
         handlers.addHandler(getResourceHandler());
-        handlers.addHandler(servletContext());
+        handlers.addHandler(servletContextHandler());
         return handlers;
     }
 
@@ -89,7 +90,7 @@ public class JettyConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public ServletContextHandler servletContext() throws IOException {
+    public ServletContextHandler servletContextHandler() {
         ServletContextHandler handler = new ServletContextHandler();
         handler.setErrorHandler(null);
         handler.setContextPath(contextPath);

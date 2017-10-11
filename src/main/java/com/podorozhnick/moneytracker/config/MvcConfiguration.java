@@ -3,20 +3,19 @@ package com.podorozhnick.moneytracker.config;
 import com.podorozhnick.moneytracker.util.JsonUtils;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
 @EnableWebMvc
 @Configuration
+@Import(SwaggerConfig.class)
 @ComponentScan(useDefaultFilters = false, basePackages = { "com.podorozhnick.moneytracker" },
         includeFilters = { @ComponentScan.Filter(Controller.class) })
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
@@ -48,6 +47,14 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
                 new MappingJackson2HttpMessageConverter();
         jackson2HttpMessageConverter.setObjectMapper(JsonUtils.getObjectMapper());
         return jackson2HttpMessageConverter;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 }
