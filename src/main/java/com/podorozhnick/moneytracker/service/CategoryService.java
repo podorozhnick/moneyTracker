@@ -2,6 +2,7 @@ package com.podorozhnick.moneytracker.service;
 
 import com.podorozhnick.moneytracker.db.dao.CategoryDao;
 import com.podorozhnick.moneytracker.db.model.Category;
+import com.podorozhnick.moneytracker.db.model.User;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,15 @@ import java.util.Optional;
 @Transactional
 public class CategoryService {
 
-    @Autowired
-    private CategoryDao categoryDao;
+    private final CategoryDao categoryDao;
+
+    private final AuthenticationFacade authenticationFacade;
 
     @Autowired
-    private AuthenticationFacade authenticationFacade;
+    public CategoryService(CategoryDao categoryDao, AuthenticationFacade authenticationFacade) {
+        this.categoryDao = categoryDao;
+        this.authenticationFacade = authenticationFacade;
+    }
 
     public Category update(Category category) {
         return categoryDao.update(category);
@@ -31,7 +36,8 @@ public class CategoryService {
 
     private void setCurrentUserIfNotExist(Category category) {
         if (category.getUser() == null) {
-            category.setUser(authenticationFacade.getAuthenticatedUser());
+            Optional<User> authenticatedUser = authenticationFacade.getAuthenticatedUser();
+            authenticatedUser.ifPresent(category::setUser);
         }
     }
 

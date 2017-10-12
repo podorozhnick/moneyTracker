@@ -19,4 +19,6 @@ public class EntrySearchFilter {
 
     private SortFilter sortFilter;
 
+    private Long userId;
+
 }

@@ -20,8 +20,8 @@ import java.util.List;
 public class Category extends DbEntity {
 
     public static final String NAME_FIELD = "name";
+    public static final String USER_FIELD = "user";
     private static final String TYPE_FIELD = "type";
-    static final String USER_FIELD = "user";
     static final String ENTRIES_FIELD = "entries";
 
     @Column(name = NAME_FIELD)
