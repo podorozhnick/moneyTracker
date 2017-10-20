@@ -22,7 +22,7 @@ import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
 
 @Controller
 @RequestMapping(ENTRIES_CONTROLLER)
-public class EntriesController {
+public class EntryController {
 
     @Autowired
     private EntryService entryService;

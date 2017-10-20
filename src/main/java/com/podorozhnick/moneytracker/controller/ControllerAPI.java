@@ -1,20 +1,20 @@
 package com.podorozhnick.moneytracker.controller;
 
-public class ControllerAPI {
+class ControllerAPI {
 
     private static final String API = "/api";
-    public static final String GENERAL_REQUEST = "";
-    public static final String ID_REQUEST = "/{id}";
+    static final String GENERAL_REQUEST = "";
+    static final String ID_REQUEST = "/{id}";
 
-    public static final String CATEGORIES_CONTROLLER = API + "/categories";
+    static final String CATEGORIES_CONTROLLER = API + "/categories";
 
-    public static final String ENTRIES_CONTROLLER = API + "/entries";
-    public static final String ENTRIES_CONTROLLER_FILTER = "/filter";
+    static final String ENTRIES_CONTROLLER = API + "/entries";
+    static final String ENTRIES_CONTROLLER_FILTER = "/filter";
 
-    public static final String AUTH_CONTROLLER = API + "/auth";
-    public static final String AUTH_CONTROLLER_LOGIN = "/login";
-    public static final String AUTH_CONTROLLER_LOGOUT = "/logout";
-    public static final String AUTH_CONTROLLER_STATUS = "/status";
+    static final String AUTH_CONTROLLER = API + "/auth";
+    static final String AUTH_CONTROLLER_LOGIN = "/login";
+    static final String AUTH_CONTROLLER_LOGOUT = "/logout";
+    static final String AUTH_CONTROLLER_STATUS = "/status";
 
 
 }

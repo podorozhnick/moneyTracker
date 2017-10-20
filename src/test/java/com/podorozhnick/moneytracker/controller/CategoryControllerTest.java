@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-public class CategoriesControllerTest extends ControllerTest {
+public class CategoryControllerTest extends ControllerTest {
 
     private MockMvc mockMvc;
     private static Random random = new Random(89);
@@ -40,7 +40,7 @@ public class CategoriesControllerTest extends ControllerTest {
     private CategoryService categoryService;
 
     @InjectMocks
-    private CategoriesController categoriesController;
+    private CategoryController categoryController;
 
     private static RestErrorHandler restErrorHandler;
 
@@ -53,7 +53,7 @@ public class CategoriesControllerTest extends ControllerTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
-                .standaloneSetup(categoriesController)
+                .standaloneSetup(categoryController)
                 .setMessageConverters(mappingJackson2HttpMessageConverter)
                 .setControllerAdvice(restErrorHandler)
                 .build();

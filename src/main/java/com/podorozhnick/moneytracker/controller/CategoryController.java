@@ -19,7 +19,7 @@ import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
 
 @Controller
 @RequestMapping(CATEGORIES_CONTROLLER)
-public class CategoriesController {
+public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
