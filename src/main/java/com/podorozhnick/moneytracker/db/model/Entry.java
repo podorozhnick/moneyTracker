@@ -21,7 +21,7 @@ public class Entry extends DbEntity {
     public static final String ENTRY_CATEGORY_GRAPH = "Entry[Category]";
 
     public static final String DATE_FIELD = "date";
-    private static final String SUM_FIELD = "sum";
+    private static final String SUM_FIELD = "amount";
     private static final String DESCRIPTION_FIELD = "description";
     public static final String CATEGORY_FIELD = "category";
 
@@ -31,7 +31,7 @@ public class Entry extends DbEntity {
 
     @Column(name = SUM_FIELD)
     @JsonProperty
-    private Double sum;
+    private Double amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = CATEGORY_FIELD)

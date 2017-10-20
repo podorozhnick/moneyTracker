@@ -60,7 +60,7 @@ public class DbCreator {
             return;
         for (Category category: categories) {
             Entry entry = new Entry().setDate(new Date()).setCategory(category)
-                    .setDescription("Test expenses").setSum(RANDOM.nextDouble() * 1000);
+                    .setDescription("Test expenses").setAmount(RANDOM.nextDouble() * 1000);
             entryService.add(entry);
         }
     }

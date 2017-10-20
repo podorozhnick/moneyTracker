@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-@ToString(exclude = {Category.USER_FIELD, Category.ENTRIES_FIELD})
+@ToString(exclude = {"user", "entries"})
 public class Category extends DbEntity {
 
     public static final String NAME_FIELD = "name";
