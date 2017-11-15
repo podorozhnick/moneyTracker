@@ -1,4 +1,4 @@
-package com.podorozhnick.moneytracker.pojo;
+package com.podorozhnick.moneytracker.pojo.search;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,17 +7,11 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class EntrySearchFilter {
+public class EntrySearchParams extends SearchParams {
 
     private Date from;
 
     private Date to;
-
-    private int page;
-
-    private int count;
-
-    private SortFilter sortFilter;
 
     private Long userId;
 

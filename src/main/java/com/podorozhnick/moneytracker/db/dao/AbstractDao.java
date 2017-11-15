@@ -1,6 +1,9 @@
 package com.podorozhnick.moneytracker.db.dao;
 
 import com.podorozhnick.moneytracker.db.model.DbEntity;
+import com.podorozhnick.moneytracker.pojo.search.PageFilter;
+import com.podorozhnick.moneytracker.pojo.search.SortFilter;
+import com.podorozhnick.moneytracker.pojo.search.enums.SortType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.QueryHints;
@@ -9,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -82,14 +83,14 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
             return Optional.empty();
         }
     }
-    List<T> getPagedResult(CriteriaQuery<T> query, int page, int size, Map<String, Object> hints) {
+    List<T> getPagedResult(CriteriaQuery<T> query, PageFilter pageFilter, Map<String, Object> hints) {
         TypedQuery<T> typedQuery = createQuery(query, hints);
-        typedQuery.setMaxResults(size).setFirstResult(page * size);
+        DaoHelper.pageQuery(typedQuery, pageFilter);
         return typedQuery.getResultList();
     }
 
-    List<T> getPagedResult(CriteriaQuery<T> query, int page, int size) {
-        return getPagedResult(query, page, size, Collections.emptyMap());
+    List<T> getPagedResult(CriteriaQuery<T> query, PageFilter pageFilter) {
+        return getPagedResult(query, pageFilter, Collections.emptyMap());
     }
 
     long getCountByQuery(CriteriaQuery<Long> query, Root<T> root) {
@@ -121,6 +122,18 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         Map<String, Object> hints = new HashMap<>();
         hints.put(QueryHints.LOADGRAPH, getSession().getEntityGraph(fetchGraphName));
         return hints;
+    }
+
+    Order getOrder(SortFilter sortFilter, Root<T> root) {
+        String sortField = sortFilter.getSortField().getFieldName();
+        Path<Object> path = root.get(sortField);
+        Order order = null;
+        if (sortFilter.getSortType().equals(SortType.DESC)) {
+            order = getCriteriaBuilder().desc(path);
+        } else {
+            order = getCriteriaBuilder().asc(path);
+        }
+        return order;
     }
 
 }

@@ -38,7 +38,7 @@ public class JsonUtils {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            log.error("Cannot get json from the object %s", object);
+            log.error("Cannot get json from the object {}", object);
         }
         return "";
     }
@@ -47,7 +47,7 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException e) {
-            log.error("Cannot object %s from a json %s", clazz, json);
+            log.error("Cannot object {} from a json {}", clazz, json);
         }
         return null;
     }
@@ -65,7 +65,7 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         } catch (IOException e) {
-            log.error("Cannot object %s from a json %s", clazz, json);
+            log.error("Cannot object {} from a json {}", clazz, json);
         }
         return Collections.emptyList();
     }

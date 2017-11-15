@@ -1,4 +1,4 @@
-package com.podorozhnick.moneytracker.pojo;
+package com.podorozhnick.moneytracker.pojo.search;
 
 import com.podorozhnick.moneytracker.db.model.Entry;
 import lombok.AllArgsConstructor;

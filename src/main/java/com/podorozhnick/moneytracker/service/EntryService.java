@@ -3,8 +3,8 @@ package com.podorozhnick.moneytracker.service;
 import com.podorozhnick.moneytracker.db.dao.EntryDao;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import com.podorozhnick.moneytracker.db.model.User;
-import com.podorozhnick.moneytracker.pojo.EntrySearchFilter;
-import com.podorozhnick.moneytracker.pojo.EntrySearchResult;
+import com.podorozhnick.moneytracker.pojo.search.EntrySearchFilter;
+import com.podorozhnick.moneytracker.pojo.search.EntrySearchResult;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,16 +47,15 @@ public class EntryService {
         return entryDao.getByKey(id);
     }
 
-    public EntrySearchResult filter(EntrySearchFilter filter) {
-        if (filter.getUserId() == null) {
+    public EntrySearchResult filter(final EntrySearchFilter filter) {
+        if (filter.getSearchParams().getUserId() == null) {
             Optional<User> authenticatedUser = authenticationFacade.getAuthenticatedUser();
-            authenticatedUser.ifPresent(user -> filter.setUserId(user.getId()));
+            authenticatedUser.ifPresent(user -> filter.getSearchParams().setUserId(user.getId()));
         }
-        List<Entry> entries = entryDao.filter(filter.getFrom(), filter.getTo(), filter.getUserId(),
-                filter.getPage(), filter.getCount(), filter.getSortFilter());
-        long count = entryDao.count(filter.getFrom(), filter.getTo(), filter.getUserId());
-        int pages = (int) (count / filter.getCount());
-        return new EntrySearchResult(entries, pages, filter.getPage());
+        List<Entry> entries = entryDao.filter(filter);
+        long count = entryDao.count(filter);
+        int pages = (int) (count / filter.getPageFilter().getCount());
+        return new EntrySearchResult(entries, pages, filter.getPageFilter().getPage());
 
     }
     
