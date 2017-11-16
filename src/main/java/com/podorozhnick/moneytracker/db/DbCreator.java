@@ -40,9 +40,9 @@ public class DbCreator {
 
     @PostConstruct
     public void init() {
-//        User admin = createAdmin();
-//        List<Category> categories = createCategories(admin);
-//        createEntries(categories);
+        User admin = createAdmin();
+        List<Category> categories = createCategories(admin);
+        createEntries(categories);
     }
 
     private User createAdmin() {
