@@ -4,6 +4,7 @@ import com.podorozhnick.moneytracker.db.dao.EntryDao;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import com.podorozhnick.moneytracker.db.model.User;
 import com.podorozhnick.moneytracker.pojo.search.EntrySearchFilter;
+import com.podorozhnick.moneytracker.pojo.search.EntrySearchParams;
 import com.podorozhnick.moneytracker.pojo.search.EntrySearchResult;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +49,19 @@ public class EntryService {
     }
 
     public EntrySearchResult filter(final EntrySearchFilter filter) {
+        if (filter.getSearchParams() == null) {
+            filter.setSearchParams(new EntrySearchParams());
+        }
         if (filter.getSearchParams().getUserId() == null) {
             Optional<User> authenticatedUser = authenticationFacade.getAuthenticatedUser();
             authenticatedUser.ifPresent(user -> filter.getSearchParams().setUserId(user.getId()));
         }
         List<Entry> entries = entryDao.filter(filter);
         long count = entryDao.count(filter);
-        int pages = (int) (count / filter.getPageFilter().getCount());
+        int pages = 1;
+        if (filter.getPageFilter().getCount() > 0) {
+            pages = (int) (count / filter.getPageFilter().getCount());
+        }
         return new EntrySearchResult(entries, pages, filter.getPageFilter().getPage());
 
     }

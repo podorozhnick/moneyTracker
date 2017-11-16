@@ -1,6 +1,7 @@
 package com.podorozhnick.moneytracker.config;
 
 import com.podorozhnick.moneytracker.util.JsonUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -9,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,11 @@ import java.util.List;
 @ComponentScan(useDefaultFilters = false, basePackages = { "com.podorozhnick.moneytracker" },
         includeFilters = { @ComponentScan.Filter(Controller.class) })
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
+
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

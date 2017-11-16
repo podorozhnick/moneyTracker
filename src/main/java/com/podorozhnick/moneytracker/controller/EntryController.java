@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
@@ -37,13 +38,13 @@ public class EntryController {
     }
 
     @PostMapping(ENTRIES_CONTROLLER_FILTER)
-    public ResponseEntity<EntrySearchResult> filterEntries(@RequestBody EntrySearchFilter entrySearchFilter) {
+    public ResponseEntity<EntrySearchResult> filterEntries(@RequestBody @Valid EntrySearchFilter entrySearchFilter) {
         EntrySearchResult result = entryService.filter(entrySearchFilter);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(GENERAL_REQUEST)
-    public ResponseEntity<Entry> addEntry(@RequestBody Entry entry) {
+    public ResponseEntity<Entry> addEntry(@RequestBody @Valid Entry entry) {
         entry = entryService.add(entry);
         return new ResponseEntity<>(entry, HttpStatus.CREATED);
     }
