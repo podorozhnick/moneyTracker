@@ -125,7 +125,7 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
     }
 
     Order getOrder(SortFilter sortFilter, Root<T> root) {
-        String sortField = sortFilter.getSortField().getFieldName();
+        String sortField = sortFilter.getSortField().getField();
         Path<Object> path = root.get(sortField);
         Order order = null;
         if (sortFilter.getSortType().equals(SortType.DESC)) {

@@ -11,8 +11,4 @@ public enum EntrySortField implements SortField {
     @Getter
     private String field;
 
-    @Override
-    public String getFieldName() {
-        return field;
-    }
 }

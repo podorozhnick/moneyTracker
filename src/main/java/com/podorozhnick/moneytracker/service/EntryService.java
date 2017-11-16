@@ -60,7 +60,7 @@ public class EntryService {
         long count = entryDao.count(filter);
         int pages = 1;
         if (filter.getPageFilter().getCount() > 0) {
-            pages = (int) (count / filter.getPageFilter().getCount());
+            pages = (int) (count / filter.getPageFilter().getCount() + 1);
         }
         return new EntrySearchResult(entries, pages, filter.getPageFilter().getPage());
 
