@@ -7,6 +7,7 @@ class ControllerAPI {
     static final String ID_REQUEST = "/{id}";
 
     static final String CATEGORIES_CONTROLLER = API + "/categories";
+    static final String CATEGORIES_CONTROLLER_FILTER = "/filter";
 
     static final String ENTRIES_CONTROLLER = API + "/entries";
     static final String ENTRIES_CONTROLLER_FILTER = "/filter";

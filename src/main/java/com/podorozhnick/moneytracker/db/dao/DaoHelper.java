@@ -4,6 +4,7 @@ import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.db.model.DbEntity;
 import com.podorozhnick.moneytracker.db.model.Entry;
 import com.podorozhnick.moneytracker.db.model.User;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchParams;
 import com.podorozhnick.moneytracker.pojo.search.EntrySearchParams;
 import com.podorozhnick.moneytracker.pojo.search.PageFilter;
 
@@ -27,6 +28,18 @@ public class DaoHelper {
         }
         if (searchParams.getTo() != null) {
             predicates.add(builder.lessThanOrEqualTo(root.get(Entry.DATE_FIELD), searchParams.getTo()));
+        }
+        return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+
+    static <T extends Category> Predicate createCategoryFilterPredicate(CriteriaBuilder builder, Root<T> root,
+                                                                        CategorySearchParams searchParams) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (searchParams.getUserId() != null) {
+            predicates.add(builder.equal(root.get(Category.USER_FIELD).get(User.ID_FIELD), searchParams.getUserId()));
+        }
+        if (searchParams.getType() != null) {
+            predicates.add(builder.equal(root.get(Category.TYPE_FIELD), searchParams.getType()));
         }
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));
     }

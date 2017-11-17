@@ -3,6 +3,9 @@ package com.podorozhnick.moneytracker.service;
 import com.podorozhnick.moneytracker.db.dao.CategoryDao;
 import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.db.model.User;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchFilter;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchParams;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +62,23 @@ public class CategoryService {
 
     public boolean isExistsById(Long id) {
         return categoryDao.isExistsById(id);
+    }
+
+    public CategorySearchResult filter(final CategorySearchFilter filter) {
+        if (filter.getSearchParams() == null) {
+            filter.setSearchParams(new CategorySearchParams());
+        }
+        if (filter.getSearchParams().getUserId() == null) {
+            Optional<User> authenticatedUser = authenticationFacade.getAuthenticatedUser();
+            authenticatedUser.ifPresent(user -> filter.getSearchParams().setUserId(user.getId()));
+        }
+        List<Category> categories = categoryDao.filter(filter);
+        long count = categoryDao.count(filter);
+        int pages = 1;
+        if (filter.getPageFilter().getCount() > 0) {
+            pages = (int) (count / filter.getPageFilter().getCount() + 1);
+        }
+        return new CategorySearchResult(categories, pages, filter.getPageFilter().getPage());
     }
 
 }

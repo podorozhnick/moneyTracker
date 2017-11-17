@@ -1,6 +1,6 @@
 package com.podorozhnick.moneytracker.pojo.search;
 
-import com.podorozhnick.moneytracker.db.model.Entry;
+import com.podorozhnick.moneytracker.db.model.Category;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +13,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EntrySearchResult {
+public class CategorySearchResult {
 
-    List<Entry> entries;
-    int pages;
+    List<Category> categories;
+    int page;
     int currentPage;
 
 }

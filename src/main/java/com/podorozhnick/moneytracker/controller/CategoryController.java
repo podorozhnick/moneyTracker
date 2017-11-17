@@ -5,6 +5,8 @@ import com.podorozhnick.moneytracker.controller.exception.ErrorMessage;
 import com.podorozhnick.moneytracker.controller.exception.NoContentException;
 import com.podorozhnick.moneytracker.controller.exception.RestException;
 import com.podorozhnick.moneytracker.db.model.Category;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchFilter;
+import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.podorozhnick.moneytracker.controller.ControllerAPI.*;
@@ -31,6 +34,12 @@ public class CategoryController {
             throw new NoContentException();
         }
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
+    }
+
+    @PostMapping(CATEGORIES_CONTROLLER_FILTER)
+    public ResponseEntity<CategorySearchResult> filterCategories(@RequestBody @Valid CategorySearchFilter categorySearchFilter) {
+        CategorySearchResult result = categoryService.filter(categorySearchFilter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(GENERAL_REQUEST)
