@@ -19,6 +19,7 @@ public class DbCreator {
 
     private static final String ADMIN_LOGIN = "admin";
     private static final String ADMIN_PASSWORD = "admin";
+    public static final String ADMIN_EMAIL = "admin@admin.admin";
     private static final Map<String, CategoryType> categoriesMap = new HashMap<>();
     private static final Random RANDOM = new Random();
 
@@ -47,7 +48,7 @@ public class DbCreator {
 
     private User createAdmin() {
         User user = new User();
-        user.setLogin(ADMIN_LOGIN).setPassword(ADMIN_PASSWORD);
+        user.setLogin(ADMIN_LOGIN).setPassword(ADMIN_PASSWORD).setEmail(ADMIN_EMAIL);
         User loaded = userService.getByLogin(ADMIN_LOGIN);
         if (loaded == null) {
             loaded = userService.add(user);
