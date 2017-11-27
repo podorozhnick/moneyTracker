@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class EntryServiceTest extends AbstractTest {
 
     @Mock
-    EntryDao entryDao;
+    private EntryDao entryDao;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();

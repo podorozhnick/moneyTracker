@@ -17,5 +17,7 @@ class ControllerAPI {
     static final String AUTH_CONTROLLER_LOGOUT = "/logout";
     static final String AUTH_CONTROLLER_STATUS = "/status";
 
+    static final String USERS_CONTROLLER = API +  "/users";
+
 
 }

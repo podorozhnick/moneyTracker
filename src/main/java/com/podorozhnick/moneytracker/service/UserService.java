@@ -25,4 +25,12 @@ public class UserService {
         user = userDao.add(user);
         return user;
     }
+
+    public boolean isExistByLogin(String login) {
+        return userDao.isExistByLogin(login);
+    }
+
+    public boolean isExistByEmail(String email) {
+        return userDao.isExistByEmail(email);
+    }
 }

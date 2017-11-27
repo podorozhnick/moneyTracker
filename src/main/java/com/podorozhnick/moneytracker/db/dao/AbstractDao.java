@@ -103,6 +103,7 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<T> root = query.from(getPersistentClass());
+        query.where(builder.equal(root.get(DbEntity.ID_FIELD), id));
         return getCountByQuery(query, root) > 0;
     }
 
