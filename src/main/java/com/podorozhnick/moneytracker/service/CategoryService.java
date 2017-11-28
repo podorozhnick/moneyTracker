@@ -29,6 +29,7 @@ public class CategoryService {
     }
 
     public Category update(Category category) {
+        setCurrentUserIfNotExist(category);
         return categoryDao.update(category);
     }
 

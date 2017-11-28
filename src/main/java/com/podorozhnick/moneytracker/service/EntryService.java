@@ -28,8 +28,8 @@ public class EntryService {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public void update(Entry entry) {
-        entryDao.update(entry);
+    public Entry update(Entry entry) {
+        return entryDao.update(entry);
     }
 
     public Entry delete(Entry entry) {
