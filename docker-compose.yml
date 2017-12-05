@@ -1,6 +1,6 @@
 web:
   image: test/moneytracker
   ports:
-    - "8915:8915"
-  volumes:
-    - ./web:/var/www/public/web/
+    - "80:8915"
+#  volumes:
+#    - ./web:/var/www/public/web/
