@@ -4,3 +4,4 @@ web:
     - "80:8915"
   volumes:
     - ./config/database-server.config.yml:/var/www/public/config/database.config.yml
+    - ./config/config.json:/var/www/public/config/config.json
