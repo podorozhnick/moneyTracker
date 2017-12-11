@@ -1,5 +1,5 @@
 driverClassName: org.postgresql.Driver
-url: moneytracker-test-instance.ctzt4qkpvmml.eu-central-1.rds.amazonaws.com:5432
+url: jdbc:postgresql://moneytracker-test-instance.ctzt4qkpvmml.eu-central-1.rds.amazonaws.com:5432/moneytracker
 username:
 password:
 dialect: org.hibernate.dialect.PostgreSQLDialect
