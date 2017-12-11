@@ -39,9 +39,9 @@ public class CategoryService {
     }
 
     private void setCurrentUserIfNotExist(Category category) {
-        if (category.getUser() == null) {
+        if (category.getOwner() == null) {
             Optional<User> authenticatedUser = authenticationFacade.getAuthenticatedUser();
-            authenticatedUser.ifPresent(category::setUser);
+            authenticatedUser.ifPresent(category::setOwner);
         }
     }
 

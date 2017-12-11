@@ -75,7 +75,7 @@ public class DbCreator {
             } else {
                 Category category = new Category();
                 category.setName(entry.getKey()).setType(entry.getValue())
-                        .setUser(user);
+                        .setOwner(user);
                 categoryList.add(categoryService.add(category));
             }
         }

@@ -1,0 +1,8 @@
+driverClassName: org.postgresql.Driver
+url: moneytracker-test-instance.ctzt4qkpvmml.eu-central-1.rds.amazonaws.com:5432
+username:
+password:
+dialect: org.hibernate.dialect.PostgreSQLDialect
+showSql: true
+formatSql: true
+hbmToDdl: update

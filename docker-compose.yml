@@ -2,5 +2,5 @@ web:
   image: test/moneytracker
   ports:
     - "80:8915"
-#  volumes:
-#    - ./web:/var/www/public/web/
+  volumes:
+    - ./config/database-server.config.yml:/var/www/public/config/database.config.yml
