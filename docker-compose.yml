@@ -1,7 +1,18 @@
-web:
-  image: test/moneytracker
-  ports:
-    - "80:8915"
-  volumes:
-    - ./config/database-server.config.yml:/var/www/public/config/database.config.yml
-    - ./config/config.json:/var/www/public/config/config.json
+version: '3'
+services:
+  server:
+    image: back/moneytracker
+    volumes:
+      - static-content:/var/www/public/web
+      - ./../database.config.yml:/var/www/public/config/database.config.yml
+      - ./../config.json:/var/www/public/config/config.json
+    ports:
+      - "8915:8915"
+
+  client:
+    image: front/moneytracker
+    volumes:
+      - static-content:/var/www/public/web
+
+volumes:
+  static-content:

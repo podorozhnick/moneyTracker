@@ -52,10 +52,6 @@ public class DatabaseSettings {
     @JsonIgnore
     private String path;
 
-    @Value("${database.default.config.path}")
-    @JsonIgnore
-    private String defaultPath;
-
     private Yaml yaml = new Yaml();
 
     @PostConstruct
@@ -65,16 +61,6 @@ public class DatabaseSettings {
             updateSettings(databaseSettings);
         } catch (IOException e) {
             log.warn("Error in loading Database settings from %s", path);
-            loadDefaultSettings();
-        }
-    }
-
-    private void loadDefaultSettings() {
-        try(InputStream in = Files.newInputStream(Paths.get(defaultPath))) {
-            DatabaseSettings databaseSettings = yaml.loadAs(in, DatabaseSettings.class);
-            updateSettings(databaseSettings);
-        } catch (IOException e) {
-            log.error("Error in loading Default Database settings from %s", defaultPath);
         }
     }
 
