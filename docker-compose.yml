@@ -7,7 +7,7 @@ services:
       - ./../database.config.yml:/var/www/public/config/database.config.yml
       - ./../config.json:/var/www/public/config/config.json
     ports:
-      - "8915:8915"
+      - "80:8915"
 
   client:
     image: front/moneytracker
