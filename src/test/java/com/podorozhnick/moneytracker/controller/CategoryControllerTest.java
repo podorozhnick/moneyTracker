@@ -123,7 +123,7 @@ public class CategoryControllerTest extends ControllerTest {
         Category category = createCategory();
         Long id = random.nextLong();
         category.setId(id);
-        when(categoryService.isExistsById(eq(id))).thenReturn(false);
+        when(categoryService.getById(eq(id))).thenReturn(null);
         String json = JsonUtils.toJson(category);
         mockMvc.perform(put(request, id)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -131,7 +131,7 @@ public class CategoryControllerTest extends ControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().string(JsonUtils.toJson(new ErrorMessage("Bad id"))));
-        verify(categoryService, times(1)).isExistsById(eq(id));
+        verify(categoryService, times(1)).getById(eq(id));
         verifyNoMoreInteractions(categoryService);
     }
 
@@ -141,7 +141,7 @@ public class CategoryControllerTest extends ControllerTest {
         Category category = createCategory();
         Long id = random.nextLong();
         category.setId(id);
-        when(categoryService.isExistsById(eq(id))).thenReturn(true);
+        when(categoryService.getById(eq(id))).thenReturn(category);
         when(categoryService.update(eq(category))).thenReturn(category);
         String json = JsonUtils.toJson(category);
         mockMvc.perform(put(request, id)
@@ -150,7 +150,7 @@ public class CategoryControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().string(json));
-        verify(categoryService, times(1)).isExistsById(eq(id));
+        verify(categoryService, times(1)).getById(eq(id));
         verify(categoryService, times(1)).update(eq(category));
         verifyNoMoreInteractions(categoryService);
     }

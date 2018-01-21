@@ -1,0 +1,8 @@
+driverClassName: org.hsqldb.jdbcDriver
+url: jdbc:hsqldb:mem:.;shutdown=false
+username: test
+password: sa
+dialect: org.hibernate.dialect.HSQLDialect
+showSql: true
+formatSql: true
+hbmToDdl: update

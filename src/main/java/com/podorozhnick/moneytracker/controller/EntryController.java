@@ -56,7 +56,7 @@ public class EntryController {
             throw new BadRequestException(new ErrorMessage("Bad id"));
         }
         BeanUtils.copyProperties(entry, loadedEntry);
-        entryService.update(loadedEntry);
+        loadedEntry = entryService.update(loadedEntry);
         return new ResponseEntity<>(loadedEntry, HttpStatus.CREATED);
     }
 

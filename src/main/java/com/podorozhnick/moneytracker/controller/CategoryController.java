@@ -10,6 +10,7 @@ import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import com.podorozhnick.moneytracker.service.exception.ServiceLayerException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,11 @@ public class CategoryController {
 
     @PutMapping(ID_REQUEST)
     public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category) throws RestException {
-        if (!categoryService.isExistsById(id)) {
+        Category loaded = categoryService.getById(id);
+        if (loaded == null) {
             throw new BadRequestException(new ErrorMessage("Bad id"));
         }
+        BeanUtils.copyProperties(category, loaded);
         try {
             category = categoryService.update(category);
         } catch (ServiceLayerException e) {

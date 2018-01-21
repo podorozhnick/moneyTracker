@@ -20,7 +20,7 @@ import java.util.List;
 public class Category extends DbEntity {
 
     public static final String NAME_FIELD = "name";
-    public static final String USER_FIELD = "user";
+    public static final String USER_FIELD = "owner";
     public static final String TYPE_FIELD = "type";
     public static final String RELATION_FIELD = "relation";
     static final String PARENT_FIELD = "parent";
@@ -37,7 +37,7 @@ public class Category extends DbEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_FIELD)
     @JsonIgnore
-    private User user;
+    private User owner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = Entry.CATEGORY_FIELD, cascade = CascadeType.REMOVE)
     @JsonIgnore

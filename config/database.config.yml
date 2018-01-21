@@ -1,0 +1,8 @@
+driverClassName: org.h2.Driver
+url: jdbc:h2:file:./data/database;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MVCC=true;MODE=ORACLE;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS main
+username:
+password: sa
+dialect: org.hibernate.dialect.H2Dialect
+showSql: true
+formatSql: true
+hbmToDdl: update
