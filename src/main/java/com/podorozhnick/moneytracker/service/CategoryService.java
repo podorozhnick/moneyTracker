@@ -7,11 +7,14 @@ import com.podorozhnick.moneytracker.pojo.search.CategorySearchFilter;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchParams;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
+import com.podorozhnick.moneytracker.service.exception.NoSuchParentCategoryException;
+import com.podorozhnick.moneytracker.service.exception.ServiceLayerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,13 +31,26 @@ public class CategoryService {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public Category update(Category category) {
+    public Category update(Category category) throws ServiceLayerException {
+        setCurrentUserIfNotExist(category);
+        setParentCategoryIfExists(category);
         return categoryDao.update(category);
     }
 
-    public Category add(Category category) {
+    public Category add(Category category) throws ServiceLayerException {
         setCurrentUserIfNotExist(category);
+        setParentCategoryIfExists(category);
         return categoryDao.add(category);
+    }
+
+    private void setParentCategoryIfExists(Category category) throws NoSuchParentCategoryException {
+        if (Objects.nonNull(category.getParent())) {
+            Category parent = categoryDao.getByKey(category.getParent().getId());
+            if (Objects.isNull(parent)){
+                throw new NoSuchParentCategoryException();
+            }
+            category.setParent(parent);
+        }
     }
 
     private void setCurrentUserIfNotExist(Category category) {
@@ -49,7 +65,17 @@ public class CategoryService {
     }
 
     public Category delete(Category category) {
+        if (Objects.nonNull(category.getParent())){
+            removeParentFromChildren(category);
+        }
         return categoryDao.delete(category);
+    }
+
+    private void removeParentFromChildren(Category category) {
+        for (Category child : category.getChildren()) {
+            child.setParent(null);
+            categoryDao.update(child);
+        }
     }
 
     public List<Category> list() {

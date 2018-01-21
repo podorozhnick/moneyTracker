@@ -1,7 +1,7 @@
 package com.podorozhnick.moneytracker.db.model.enums;
 
-public enum CategoryType {
+public enum RelationType {
 
-    INCOMES, EXPENSES
+    PARENT, CHILD
 
 }

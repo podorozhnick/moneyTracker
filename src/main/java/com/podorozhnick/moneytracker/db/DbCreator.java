@@ -7,6 +7,7 @@ import com.podorozhnick.moneytracker.db.model.enums.CategoryType;
 import com.podorozhnick.moneytracker.service.CategoryService;
 import com.podorozhnick.moneytracker.service.EntryService;
 import com.podorozhnick.moneytracker.service.UserService;
+import com.podorozhnick.moneytracker.service.exception.ServiceLayerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -76,7 +77,11 @@ public class DbCreator {
                 Category category = new Category();
                 category.setName(entry.getKey()).setType(entry.getValue())
                         .setUser(user);
-                categoryList.add(categoryService.add(category));
+                try {
+                    categoryList.add(categoryService.add(category));
+                } catch (ServiceLayerException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return categoryList;

@@ -8,6 +8,7 @@ import com.podorozhnick.moneytracker.db.model.Category;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchFilter;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.service.CategoryService;
+import com.podorozhnick.moneytracker.service.exception.ServiceLayerException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,10 +44,13 @@ public class CategoryController {
     }
 
     @PostMapping(GENERAL_REQUEST)
-    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
-        category = categoryService.add(category);
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) throws RestException {
+        try {
+            category = categoryService.add(category);
+        } catch (ServiceLayerException e) {
+            throw new BadRequestException(e.getErrorMessage());
+        }
         return new ResponseEntity<>(category, HttpStatus.CREATED);
-
     }
 
     @PutMapping(ID_REQUEST)
@@ -54,7 +58,11 @@ public class CategoryController {
         if (!categoryService.isExistsById(id)) {
             throw new BadRequestException(new ErrorMessage("Bad id"));
         }
-        category = categoryService.update(category);
+        try {
+            category = categoryService.update(category);
+        } catch (ServiceLayerException e) {
+            throw new BadRequestException(e.getErrorMessage());
+        }
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 

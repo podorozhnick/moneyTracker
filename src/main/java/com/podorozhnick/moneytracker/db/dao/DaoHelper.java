@@ -41,6 +41,9 @@ public class DaoHelper {
         if (searchParams.getType() != null) {
             predicates.add(builder.equal(root.get(Category.TYPE_FIELD), searchParams.getType()));
         }
+        if (searchParams.getRelation() != null) {
+            predicates.add(builder.equal(root.get(Category.RELATION_FIELD), searchParams.getRelation()));
+        }
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
