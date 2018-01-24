@@ -52,6 +52,6 @@ public class Category extends DbEntity {
     private List<Category> children;
 
     @Column(name = RELATION_FIELD)
-    private RelationType relation;
+    private RelationType relation = RelationType.CHILD;
 
 }
