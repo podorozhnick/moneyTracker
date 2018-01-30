@@ -7,9 +7,9 @@ import com.podorozhnick.moneytracker.pojo.search.CategorySearchFilter;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchParams;
 import com.podorozhnick.moneytracker.pojo.search.CategorySearchResult;
 import com.podorozhnick.moneytracker.security.AuthenticationFacade;
-import com.podorozhnick.moneytracker.service.exception.NoSuchParentCategoryException;
 import com.podorozhnick.moneytracker.service.exception.ServiceLayerException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.podorozhnick.moneytracker.service.validator.CategoryServiceValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,37 +19,33 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class CategoryService {
 
     private final CategoryDao categoryDao;
-
     private final AuthenticationFacade authenticationFacade;
-
-    @Autowired
-    public CategoryService(CategoryDao categoryDao, AuthenticationFacade authenticationFacade) {
-        this.categoryDao = categoryDao;
-        this.authenticationFacade = authenticationFacade;
-    }
-
-    public Category update(Category category) throws ServiceLayerException {
-        setCurrentUserIfNotExist(category);
-        setParentCategoryIfExists(category);
-        return categoryDao.update(category);
-    }
+    private final CategoryServiceValidator validator;
 
     public Category add(Category category) throws ServiceLayerException {
+        validator.validateCreate(category);
         setCurrentUserIfNotExist(category);
         setParentCategoryIfExists(category);
         return categoryDao.add(category);
     }
 
-    private void setParentCategoryIfExists(Category category) throws NoSuchParentCategoryException {
+    public Category update(Category category) throws ServiceLayerException {
+        validator.validateEdit(category);
+        setCurrentUserIfNotExist(category);
+        setParentCategoryIfExists(category);
+        return categoryDao.update(category);
+    }
+
+    private void setParentCategoryIfExists(Category category) {
         if (Objects.nonNull(category.getParent())) {
             Category parent = categoryDao.getByKey(category.getParent().getId());
-            if (Objects.isNull(parent)){
-                throw new NoSuchParentCategoryException();
+            if (Objects.nonNull(parent)){
+                category.setParent(parent);
             }
-            category.setParent(parent);
         }
     }
 
