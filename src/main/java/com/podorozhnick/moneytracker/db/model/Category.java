@@ -47,7 +47,7 @@ public class Category extends DbEntity {
     @JoinColumn(name = PARENT_FIELD)
     private Category parent;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = PARENT_FIELD)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PARENT_FIELD, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Category> children;
 
