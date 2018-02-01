@@ -29,14 +29,14 @@ public class CategoryServiceValidator implements Validator<Category> {
 
     private ThrowableConsumer<Category, ServiceValidationException> getCreateValidators()  {
         List<ThrowableConsumer<Category, ServiceValidationException>> validators = new ArrayList<>();
-        validators.add(this::validateIfParentNotNullInParentRelation);
+        validators.add(this::validateIfParentNullInParentRelation);
         validators.add(this::validateIfParentExists);
         return ThrowableConsumer.combine(validators);
     }
 
-    private void validateIfParentNotNullInParentRelation(Category category) throws ServiceValidationException {
-        if (RelationType.PARENT.equals(category.getRelation()) && Objects.isNull(category.getParent())) {
-            throw new ServiceValidationException(new ErrorMessage("Parent is null in PARENT relation type"));
+    private void validateIfParentNullInParentRelation(Category category) throws ServiceValidationException {
+        if (RelationType.PARENT.equals(category.getRelation()) && Objects.nonNull(category.getParent())) {
+            throw new ServiceValidationException(new ErrorMessage("Parent is not null in PARENT relation type"));
         }
     }
 
