@@ -52,6 +52,7 @@ public class Category extends DbEntity {
     private List<Category> children;
 
     @Column(name = RELATION_FIELD)
+    @Enumerated(EnumType.STRING)
     private RelationType relation = RelationType.CHILD;
 
 }

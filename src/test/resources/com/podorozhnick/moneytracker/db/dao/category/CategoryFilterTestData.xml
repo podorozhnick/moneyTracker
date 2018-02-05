@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <users id="1"/>
+    <users id="2"/>
+    <category id="1" name="TestCategory1" type="INCOMES" relation="PARENT" owner="1" />
+    <category id="2" name="TestCategory2" type="INCOMES" relation="CHILD" owner="1" />
+    <category id="3" name="TestCategory3" type="INCOMES" relation="PARENT" owner="2" />
+    <category id="4" name="TestCategory4" type="INCOMES" relation="CHILD" owner="2" />
+    <category id="5" name="TestCategory5" type="INCOMES" relation="PARENT" owner="1" />
+    <category id="6" name="TestCategory6" type="EXPENSES" relation="CHILD" owner="1" />
+    <category id="7" name="TestCategory7" type="EXPENSES" relation="PARENT" owner="2" />
+    <category id="8" name="TestCategory8" type="EXPENSES" relation="CHILD" owner="2" />
+    <category id="9" name="TestCategory9" type="EXPENSES" relation="PARENT" owner="1" />
+    <category id="10" name="TestCategory10" type="EXPENSES" relation="CHILD" owner="1" />
+</dataset>

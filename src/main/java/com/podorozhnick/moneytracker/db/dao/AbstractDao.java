@@ -125,16 +125,19 @@ public abstract class AbstractDao<PK extends Serializable, T extends DbEntity> {
         return hints;
     }
 
-    Order getOrder(SortFilter sortFilter, Root<T> root) {
+    List<Order> getOrder(SortFilter sortFilter, Root<T> root) {
+        List<Order> orders = new ArrayList<>();
+        if (Objects.isNull(sortFilter)) {
+            return orders;
+        }
         String sortField = sortFilter.getSortField().getField();
         Path<Object> path = root.get(sortField);
-        Order order = null;
         if (sortFilter.getSortType().equals(SortType.DESC)) {
-            order = getCriteriaBuilder().desc(path);
+            orders.add(getCriteriaBuilder().desc(path));
         } else {
-            order = getCriteriaBuilder().asc(path);
+            orders.add(getCriteriaBuilder().asc(path));
         }
-        return order;
+        return orders;
     }
 
 }
