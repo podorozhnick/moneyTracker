@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan("com.podorozhnick.moneytracker.db.dao")
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = { "classpath:test.application.properties" })
 @Import(HibernateConfiguration.class)
 public class DbUnitConfig {
 
