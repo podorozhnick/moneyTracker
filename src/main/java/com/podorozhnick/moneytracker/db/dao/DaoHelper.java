@@ -14,20 +14,23 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DaoHelper {
 
     static <T extends Entry> Predicate createEntryFilterPredicate(CriteriaBuilder builder, Root<T> root,
                                                                   EntrySearchParams searchParams) {
         List<Predicate> predicates = new ArrayList<>();
-        if (searchParams.getUserId() != null) {
-            predicates.add(builder.equal(root.get(Entry.CATEGORY_FIELD).get(Category.USER_FIELD).get(User.ID_FIELD), searchParams.getUserId()));
-        }
-        if (searchParams.getFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get(Entry.DATE_FIELD), searchParams.getFrom()));
-        }
-        if (searchParams.getTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get(Entry.DATE_FIELD), searchParams.getTo()));
+        if (Objects.nonNull(searchParams)) {
+            if (searchParams.getUserId() != null) {
+                predicates.add(builder.equal(root.get(Entry.CATEGORY_FIELD).get(Category.USER_FIELD).get(User.ID_FIELD), searchParams.getUserId()));
+            }
+            if (searchParams.getFrom() != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get(Entry.DATE_FIELD), searchParams.getFrom()));
+            }
+            if (searchParams.getTo() != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get(Entry.DATE_FIELD), searchParams.getTo()));
+            }
         }
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
@@ -35,14 +38,16 @@ public class DaoHelper {
     static <T extends Category> Predicate createCategoryFilterPredicate(CriteriaBuilder builder, Root<T> root,
                                                                         CategorySearchParams searchParams) {
         List<Predicate> predicates = new ArrayList<>();
-        if (searchParams.getUserId() != null) {
-            predicates.add(builder.equal(root.get(Category.USER_FIELD).get(User.ID_FIELD), searchParams.getUserId()));
-        }
-        if (searchParams.getType() != null) {
-            predicates.add(builder.equal(root.get(Category.TYPE_FIELD), searchParams.getType()));
-        }
-        if (searchParams.getRelation() != null) {
-            predicates.add(builder.equal(root.get(Category.RELATION_FIELD), searchParams.getRelation()));
+        if (Objects.nonNull(searchParams)) {
+            if (searchParams.getUserId() != null) {
+                predicates.add(builder.equal(root.get(Category.USER_FIELD).get(User.ID_FIELD), searchParams.getUserId()));
+            }
+            if (searchParams.getType() != null) {
+                predicates.add(builder.equal(root.get(Category.TYPE_FIELD), searchParams.getType()));
+            }
+            if (searchParams.getRelation() != null) {
+                predicates.add(builder.equal(root.get(Category.RELATION_FIELD), searchParams.getRelation()));
+            }
         }
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
