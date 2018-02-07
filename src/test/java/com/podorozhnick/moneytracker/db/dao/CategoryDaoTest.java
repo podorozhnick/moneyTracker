@@ -92,4 +92,29 @@ public class CategoryDaoTest extends DbUnitDaoTest {
         assertThat(categories).isSortedAccordingTo(Comparator.comparing(Category::getName));
     }
 
+    @Test
+    @DatabaseSetup("category/CategoryFilterTestData.xml")
+    public void filterUnfilteredFirstPageByFiveUnsorted() {
+        CategorySearchFilter filter = createCategorySearchFilter(
+                createPageFilter(5, 1),
+                null,
+                null
+        );
+        List<Category> categories = categoryDao.filter(filter);
+        assertThat(categories).hasSize(5);
+    }
+
+    @Test
+    @DatabaseSetup("category/CategoryFilterTestData.xml")
+    public void filterUnfilteredThirdPageByTwoSortedByNameDesc() {
+        CategorySearchFilter filter = createCategorySearchFilter(
+                createPageFilter(2, 3),
+                createCategorySortFilter(SortType.DESC, CategorySortField.NAME),
+                null
+        );
+        List<Category> categories = categoryDao.filter(filter);
+        assertThat(categories).hasSize(2);
+        assertThat(categories).isSortedAccordingTo(Comparator.comparing(Category::getName).reversed());
+    }
+
 }
